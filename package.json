@@ -26,5 +26,11 @@
     "lint-staged": "^16.2.6",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "lint-staged": {
+  "*.{js,ts,jsx,tsx}": [
+      "biome check --write",
+      "biome format --write"
+    ]
+}
 }
