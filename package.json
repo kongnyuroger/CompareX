@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "test": "echo \"No tests configured\"",
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
