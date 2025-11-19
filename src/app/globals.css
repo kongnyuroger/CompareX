@@ -63,7 +63,7 @@
 body {
   background: var(--color-background);
   color: var(--foreground);
-  padding:  0, 50PX;
+  padding:  0 50PX;
   font-family: Arial, Helvetica, sans-serif;
 }
 

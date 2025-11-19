@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import ProductCard from "./components/ProductCard";
 
 export default function Home() {
   return (
@@ -14,6 +15,9 @@ export default function Home() {
         </p>
 
         <div className="mt-8 max-w-xl mx-auto"></div>
+      </section>
+      <section className="section ">
+        <ProductCard />
       </section>
     </main>
   );
