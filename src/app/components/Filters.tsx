@@ -14,7 +14,16 @@ export default function Filters({
   sort,
   onSortChange,
 }: Props) {
-  const categoryList = ["All", "Case"];
+  const categoryList = [
+    "All",
+    "Case",
+    "kitchen",
+    "phone",
+    "laptobs",
+    "computer",
+    "smartwatches",
+    "cameras",
+  ];
 
   const priceId = useId();
   return (

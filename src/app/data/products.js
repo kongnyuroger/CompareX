@@ -7,6 +7,7 @@ export const products = [
     tagColor: "bg-green-100 text-green-700",
     image: "/images/case-green.png",
     stores: ["jumia", "ebay"],
+    category: "phone",
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const products = [
     tagColor: "bg-blue-100 text-blue-700",
     image: "/images/case-blue.png",
     stores: ["amazon", "jumia"],
+    category: "phone",
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ export const products = [
     tagColor: "text-gray-600",
     image: "/images/case-yellow.png",
     stores: ["walmart", "ebay"],
+    category: "phone",
   },
   // Laptops
   {
@@ -35,6 +38,7 @@ export const products = [
     tagColor: "bg-purple-100 text-purple-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "walmart"],
+    category: "Laptops",
   },
   {
     id: 5,
@@ -42,8 +46,9 @@ export const products = [
     price: 899.99,
     tag: "Best Value",
     tagColor: "bg-yellow-100 text-yellow-700",
-    image: "/images/macbook-air.png",
+    image: "/images/blanck.jpg",
     stores: ["jumia", "amazon"],
+    category: "Laptops",
   },
 
   // Headphones
@@ -55,6 +60,7 @@ export const products = [
     tagColor: "bg-red-100 text-red-700",
     image: "/images/blanck.jpg",
     stores: ["ebay", "walmart"],
+    category: "heardphones",
   },
   {
     id: 7,
@@ -64,6 +70,7 @@ export const products = [
     tagColor: "bg-green-100 text-green-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "jumia"],
+    category: "heardphones",
   },
 
   // Smartwatches
@@ -75,6 +82,7 @@ export const products = [
     tagColor: "bg-blue-100 text-blue-700",
     image: "/images/blanck.jpg",
     stores: ["jumia", "ebay"],
+    category: "smartwatches",
   },
   {
     id: 9,
@@ -84,6 +92,7 @@ export const products = [
     tagColor: "bg-green-100 text-green-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "walmart"],
+    category: "smartwatches",
   },
 
   // Cameras
@@ -95,6 +104,7 @@ export const products = [
     tagColor: "bg-red-100 text-red-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "ebay"],
+    category: "cameras",
   },
 
   // Gaming
@@ -126,6 +136,7 @@ export const products = [
     tagColor: "bg-green-100 text-green-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "jumia"],
+    category: "kitchen",
   },
   {
     id: 14,
@@ -135,6 +146,7 @@ export const products = [
     tagColor: "bg-teal-100 text-teal-700",
     image: "/images/blanck.jpg",
     stores: ["walmart", "amazon"],
+    category: "kitchen",
   },
 
   // Computer Accessories
@@ -146,6 +158,7 @@ export const products = [
     tagColor: "bg-gray-100 text-gray-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "ebay"],
+    category: "computer",
   },
   {
     id: 16,
@@ -155,6 +168,7 @@ export const products = [
     tagColor: "bg-green-100 text-green-700",
     image: "/images/blanck.jpg",
     stores: ["jumia", "walmart"],
+    category: "computer",
   },
 
   // Fashion
@@ -166,6 +180,7 @@ export const products = [
     tagColor: "bg-orange-100 text-orange-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "ebay"],
+    category: "fashion",
   },
   {
     id: 18,
@@ -175,6 +190,7 @@ export const products = [
     tagColor: "bg-pink-100 text-pink-700",
     image: "/images/blanck.jpg",
     stores: ["jumia", "walmart"],
+    category: "fashion",
   },
 
   // Accessories
@@ -186,6 +202,7 @@ export const products = [
     tagColor: "bg-blue-100 text-blue-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "ebay"],
+    category: "accessories",
   },
   {
     id: 20,
@@ -195,5 +212,6 @@ export const products = [
     tagColor: "bg-purple-100 text-purple-700",
     image: "/images/blanck.jpg",
     stores: ["amazon", "jumia"],
+    category: "accessories",
   },
 ];

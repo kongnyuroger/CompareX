@@ -55,13 +55,7 @@
     @apply border border-gray-200 text-gray-700 font-medium px-6 h-12 rounded-xl;
   }
 
-  .card {
-    background: var(--color-background-card);
-    box-shadow: var(--shadow-card);
-    border-radius: var(--radius-2xl);
-    padding: 1.5rem;
-    
-  }
+  
 
 }
 
@@ -80,10 +74,10 @@
 }
 
 body {
-  @apply bg-background p-3 sm:p-10
+  @apply bg-background p-3 sm:p-10;
 
 }
 
-html {
-  font-family: Arial, Helvetica, sans-serif;
-}
+ html {
+   font-family: Arial, Helvetica, sans-serif;
+ }
