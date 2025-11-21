@@ -1,7 +1,9 @@
 import Link from "next/link";
-import React from "react";
+import { useId } from "react";
 
 const LoginPage = () => {
+  const passwordId = useId();
+  const userUniqueId = useId();
   return (
     <div className="text-center justify-center">
       <h1 className="text-8xl  font-semibold text-[#1F2937] mb-[50px]">
@@ -11,7 +13,11 @@ const LoginPage = () => {
       <form action="" className="flex justify-center">
         <div className="w-full flex flex-col gap-4 ">
           <div>
+            <label htmlFor={userUniqueId} className="sr-only">
+              email
+            </label>
             <input
+              id={userUniqueId}
               className="form-input"
               type="text"
               placeholder="User Name* or Email*"
@@ -20,7 +26,11 @@ const LoginPage = () => {
           </div>
 
           <div>
+            <label htmlFor={passwordId} className="sr-only">
+              Password
+            </label>
             <input
+              id={passwordId}
               className="form-input"
               type="text"
               placeholder="Password*"

@@ -1,8 +1,10 @@
 import Link from "next/link";
-import React from "react";
-import loginPage from "../login/page";
+import { useId } from "react";
 
 const RegisterPage = () => {
+  const passwordId = useId();
+  const usernameId = useId();
+  const emailId = useId();
   return (
     <div className="text-center justify-center">
       <h1 className="text-8xl  font-semibold text-[#1F2937] mb-[50px]">
@@ -12,7 +14,11 @@ const RegisterPage = () => {
       <form action="" className="flex justify-center">
         <div className="w-full flex flex-col gap-4 ">
           <div>
+            <label htmlFor={usernameId} className="sr-only">
+              User name
+            </label>
             <input
+              id={usernameId}
               className="form-input"
               type="text"
               placeholder="User Name*"
@@ -21,17 +27,25 @@ const RegisterPage = () => {
           </div>
 
           <div>
+            <label htmlFor={emailId} className="sr-only">
+              Email
+            </label>
             <input
               className="form-input"
+              id={emailId}
               type="email"
               placeholder="Email*"
               required
             />
           </div>
           <div>
+            <label htmlFor={passwordId} className="sr-only">
+              Password
+            </label>
             <input
+              id={passwordId}
               className="form-input"
-              type="text"
+              type="password"
               placeholder="Password*"
               required
             />
@@ -48,9 +62,8 @@ const RegisterPage = () => {
           <p>
             Already have and acount{" "}
             <Link className="text-primary text-2xl" href="/login">
-              {" "}
               Log in
-            </Link>{" "}
+            </Link>
           </p>
         </div>
       </form>
