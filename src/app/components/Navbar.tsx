@@ -1,7 +1,20 @@
 "use client";
-
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 export default function Navbar() {
+  const [token, setToken] = useState<string | null>(null);
+  const navigate = useRouter();
+  useEffect(() => {
+    const t = localStorage.getItem("token");
+    setToken(t);
+  }, []);
+  console.log(token);
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate.push("/login");
+    window.location.reload();
+  };
   return (
     <nav className="flex items-center justify-between mb-6">
       <div>
@@ -11,16 +24,29 @@ export default function Navbar() {
         </Link>{" "}
       </div>
 
-      <div className="flex items-center gap-4">
-        <button
-          type="button"
-          className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-        >
-          <Link href="login"> Log in </Link>
-        </button>
-        <button type="button" className="btn-primary ">
-          <Link href="/register">Sign up</Link>
-        </button>
+      <div className="navbar-actions flex items-center gap-4">
+        {(!token && (
+          <>
+            <button
+              type="button"
+              className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
+            >
+              <Link href="login"> Log in </Link>
+            </button>
+            <button
+              type="button"
+              className="btn-primary"
+              onClick={() => navigate.push("/register")}
+            >
+              Sign up
+            </button>
+          </>
+        )) ||
+          (token && (
+            <button type="button" className="btn-primary" onClick={logout}>
+              Logout
+            </button>
+          ))}
       </div>
     </nav>
   );

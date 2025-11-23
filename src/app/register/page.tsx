@@ -1,18 +1,55 @@
+"use client";
 import Link from "next/link";
-import { useId } from "react";
+import { useId, useState } from "react";
+import { register } from ".././services/api";
 
 const RegisterPage = () => {
   const passwordId = useId();
   const usernameId = useId();
   const emailId = useId();
+
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setError("");
+
+    try {
+      setLoading(true);
+      const res = await register(username, email, password);
+
+      localStorage.setItem("token", res.data.accessToken);
+      localStorage.setItem("userName", res.data.user.username);
+    } catch (err: any) {
+      const message = err.response?.data?.message;
+
+      setError(message);
+    }
+
+    setLoading(false);
+    setEmail("");
+    setPassword("");
+    setUserName("");
+    window.location.reload();
+  };
+
   return (
     <div className="text-center justify-center">
-      <h1 className="text-8xl  font-semibold text-[#1F2937] mb-[50px]">
+      <h1 className="text-8xl font-semibold text-[#1F2937] mb-[50px]">
         Sign up
       </h1>
 
-      <form action="" className="flex justify-center">
-        <div className="w-full flex flex-col gap-4 ">
+      <form onSubmit={handleSubmit} className="flex justify-center">
+        <div className="w-full flex flex-col gap-4">
+          {error && (
+            <p className="text-red-500 bg-red-100 p-2 rounded-md">{error}</p>
+          )}
+
           <div>
             <label htmlFor={usernameId} className="sr-only">
               User name
@@ -21,6 +58,8 @@ const RegisterPage = () => {
               id={usernameId}
               className="form-input"
               type="text"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
               placeholder="User Name*"
               required
             />
@@ -34,10 +73,13 @@ const RegisterPage = () => {
               className="form-input"
               id={emailId}
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Email*"
               required
             />
           </div>
+
           <div>
             <label htmlFor={passwordId} className="sr-only">
               Password
@@ -46,21 +88,25 @@ const RegisterPage = () => {
               id={passwordId}
               className="form-input"
               type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password*"
               required
             />
           </div>
+
           <div>
             <button
-              className=" bg-primary text-2xl p-4 w-full sm:w-1/2 text-white cursor-pointer
-                rounded-xl  hover:bg-primary-dark"
+              className="bg-primary text-2xl p-4 w-full sm:w-1/2 text-white cursor-pointer
+              rounded-xl hover:bg-primary-dark"
               type="submit"
             >
-              Sign up
+              {(loading && <h1>Loading...</h1>) || <h1>Sign up</h1>}
             </button>
           </div>
+
           <p>
-            Already have and acount{" "}
+            Already have an account?{" "}
             <Link className="text-primary text-2xl" href="/login">
               Log in
             </Link>
