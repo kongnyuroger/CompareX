@@ -1,9 +1,10 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-
+@custom-variant dark (&:is(.dark *));
 
   @theme {
-    
+
   --color-primary: #2563eb;
   --color-primary-dark: #1e40af;
   --color-primary-light: #60a5fa;
@@ -20,7 +21,6 @@
   /* Shadows */
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.08);
   --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
-
 
   /* Typography sizes */
   --text-display: 36px;
@@ -57,7 +57,6 @@
  .form-input {
     @apply bg-white text-2xl p-4 w-full  sm:w-1/2 border  border-gray-200  rounded-xl;
   }
-  
 
 }
 
@@ -83,3 +82,5 @@ body {
  html {
    font-family: Arial, Helvetica, sans-serif;
  }
+
+ 
