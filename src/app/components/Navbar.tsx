@@ -12,8 +12,8 @@ export default function Navbar() {
   console.log(token);
   const logout = () => {
     localStorage.removeItem("token");
+    setToken(null);
     navigate.push("/login");
-    window.location.reload();
   };
   return (
     <nav className="flex items-center justify-between mb-6">
@@ -27,12 +27,12 @@ export default function Navbar() {
       <div className="navbar-actions flex items-center gap-4">
         {(!token && (
           <>
-            <button
-              type="button"
+            <Link
+              href="/login"
               className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
             >
-              <Link href="login"> Log in </Link>
-            </button>
+              Log in
+            </Link>
             <button
               type="button"
               className="btn-primary"

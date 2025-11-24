@@ -27,11 +27,10 @@ const RegisterPage = () => {
       localStorage.setItem("userName", res.data.user.username);
     } catch (err: any) {
       const message = err.response?.data?.message;
-
       setError(message);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
     setEmail("");
     setPassword("");
     setUserName("");
