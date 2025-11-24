@@ -14,31 +14,24 @@ const LoginPage = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     setError("");
+    setLoading(true);
 
     try {
-      setLoading(true);
       const res = await loginUser(emailOrUsername, password);
-
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("userName", res.data.user.username);
-
-      router.push("/");
     } catch (err: any) {
-      const message = err.response?.data?.message;
-
+      const message = err?.response?.data?.message;
       setError(message);
+    } finally {
+      setLoading(false);
+      window.location.reload();
+      router.push("/");
     }
-
-    setLoading(false);
-    setEmailOrUsername("");
-    setPassword("");
-    window.location.reload();
   };
-
   return (
     <div className="text-center justify-center">
       <h1 className="text-8xl  font-semibold text-[#1F2937] mb-[50px]">
@@ -72,7 +65,7 @@ const LoginPage = () => {
             <input
               id={passwordId}
               className="form-input"
-              type="text"
+              type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password*"
