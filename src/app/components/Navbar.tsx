@@ -1,20 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useUserContext } from "@/lib/authProvider";
 export default function Navbar() {
-  const [token, setToken] = useState<string | null>(null);
+  const { token, logout, loading } = useUserContext();
   const navigate = useRouter();
-  useEffect(() => {
-    const t = localStorage.getItem("token");
-    setToken(t);
-  }, []);
-  console.log(token);
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    navigate.push("/login");
-  };
+
   return (
     <nav className="flex items-center justify-between mb-6">
       <div>
@@ -25,14 +16,14 @@ export default function Navbar() {
       </div>
 
       <div className="navbar-actions flex items-center gap-4">
-        {(!token && (
+        {loading ? null : token ? (
+          <button type="button" className="btn-primary" onClick={logout}>
+            {" "}
+            Logout
+          </button>
+        ) : (
           <>
-            <Link
-              href="/login"
-              className="text-sm text-gray-600 hover:text-gray-900 cursor-pointer"
-            >
-              Log in
-            </Link>
+            <Link href="/login">Log in</Link>
             <button
               type="button"
               className="btn-primary"
@@ -41,12 +32,7 @@ export default function Navbar() {
               Sign up
             </button>
           </>
-        )) ||
-          (token && (
-            <button type="button" className="btn-primary" onClick={logout}>
-              Logout
-            </button>
-          ))}
+        )}
       </div>
     </nav>
   );

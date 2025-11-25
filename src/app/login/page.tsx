@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
+import { useUserContext } from "@/lib/authProvider";
 import { loginUser } from ".././services/api";
 
 const LoginPage = () => {
@@ -13,6 +14,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { login } = useUserContext();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -21,15 +23,16 @@ const LoginPage = () => {
 
     try {
       const res = await loginUser(emailOrUsername, password);
-      localStorage.setItem("token", res.data.accessToken);
-      localStorage.setItem("userName", res.data.user.username);
+      const token = res.data.token;
+      login(token);
+      router.push("/");
     } catch (err: any) {
-      const message = err?.response?.data?.message;
+      const message =
+        err?.response?.data?.message || err?.message || "An error occurred";
       setError(message);
     } finally {
       setLoading(false);
-      window.location.reload();
-      router.push("/");
+      console.log("Login successful");
     }
   };
   return (
