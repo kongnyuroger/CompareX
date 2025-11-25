@@ -6,12 +6,14 @@ type UserContextProviderprop = {
   token: string | null;
   login: (token: string | null) => void;
   logout: () => void;
+  loading: boolean;
 };
 
 const UserContext = createContext<UserContextProviderprop>({
   token: null,
   login: () => {},
   logout: () => {},
+  loading: false,
 });
 
 export function UserContextProvider({
@@ -20,11 +22,13 @@ export function UserContextProvider({
   children: React.ReactNode;
 }) {
   const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
     const t = localStorage.getItem("token");
-    if (t) setToken(t);
+    setToken(t);
+    setLoading(false);
   }, []);
 
   const login = (newToken: string | null) => {
@@ -34,6 +38,7 @@ export function UserContextProvider({
     } else {
       localStorage.removeItem("token");
     }
+    setToken(newToken);
   };
 
   const logout = () => {
@@ -43,7 +48,7 @@ export function UserContextProvider({
   };
 
   return (
-    <UserContext.Provider value={{ token, login, logout }}>
+    <UserContext.Provider value={{ token, login, logout, loading }}>
       {children}
     </UserContext.Provider>
   );
