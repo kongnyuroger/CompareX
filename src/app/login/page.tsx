@@ -32,7 +32,6 @@ const LoginPage = () => {
       setError(message);
     } finally {
       setLoading(false);
-      console.log("Login successful");
     }
   };
   return (
@@ -81,7 +80,7 @@ const LoginPage = () => {
                 rounded-xl hover:bg-primary-dark"
               type="submit"
             >
-              {(loading && <h1>Loading...</h1>) || <h1>Log in</h1>}
+              {loading ? "Loading...." : "Log in"}
             </button>
           </div>
           <p>

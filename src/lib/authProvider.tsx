@@ -34,7 +34,6 @@ export function UserContextProvider({
   const login = (newToken: string | null) => {
     if (newToken) {
       localStorage.setItem("token", newToken);
-      router.push("/");
     } else {
       localStorage.removeItem("token");
     }
