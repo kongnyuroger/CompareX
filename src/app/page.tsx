@@ -10,6 +10,7 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,6 +24,7 @@ export default function HomePage() {
     } catch (err: any) {
       const message =
         err?.response?.data?.message || err?.message || "An error occurred";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -50,6 +52,8 @@ export default function HomePage() {
             >
               Compare
             </button>
+          ) : error ? (
+            <p className="text-error">{error}</p>
           ) : (
             <button
               type="button"

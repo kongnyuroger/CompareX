@@ -21,4 +21,4 @@ export const loginUser = (emailOrUsername, password) =>
   API.post("/auth/login", { emailOrUsername, password });
 
 export const searchProduct = (searchTerm) =>
-  API.get(`/ai/rank?q=${searchTerm}`);
+  API.get(`/ai/rank?q=${encodeURIComponent(searchTerm)}`);
