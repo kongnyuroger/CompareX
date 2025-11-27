@@ -52,8 +52,6 @@ export default function HomePage() {
             >
               Compare
             </button>
-          ) : error ? (
-            <p className="text-error">{error}</p>
           ) : (
             <button
               type="button"
@@ -76,6 +74,8 @@ export default function HomePage() {
             visible={true}
           />
         </div>
+      ) : error ? (
+        <p className="text-error text-center">{error}</p>
       ) : (
         <ProductGrid products={products} />
       )}
