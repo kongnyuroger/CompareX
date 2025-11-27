@@ -27,7 +27,7 @@ export default function HomePage() {
     }
   };
   return (
-    <main className="max-w-6xl mx-auto px-6">
+    <main className=" px-6">
       <Hero />
       <form onSubmit={handleSearch} className="flex justify-center mt-8 px-4">
         <div className="w-full sm:w-[620px] bg-white rounded-2xl shadow-sm flex flex-col sm:flex-row overflow-hidden">

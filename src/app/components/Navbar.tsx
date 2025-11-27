@@ -7,7 +7,7 @@ export default function Navbar() {
   const navigate = useRouter();
 
   return (
-    <nav className="flex items-center justify-between mb-6">
+    <nav className="flex items-center justify-between mb-30">
       <div>
         {" "}
         <Link className="text-2xl font-semibold text-primary-900" href="/">
@@ -26,7 +26,7 @@ export default function Navbar() {
             <Link href="/login">Log in</Link>
             <button
               type="button"
-              className="btn-primary"
+              className="btn-primary tea"
               onClick={() => navigate.push("/register")}
             >
               Sign up
