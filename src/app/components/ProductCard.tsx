@@ -19,7 +19,7 @@ export default function ProductCard({
 }: Props) {
   return (
     <div className="bg-white shadow-sm rounded-2xl p-6 flex flex-col items-center text-center">
-      <Image
+      <img
         src={image}
         width={180}
         height={180}

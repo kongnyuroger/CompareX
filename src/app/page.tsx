@@ -1,57 +1,63 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Filters from "./components/Filters";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
-import SearchBar from "./components/SearchBar";
-import { products } from "./data/products";
+import { searchProduct } from "./services/api";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All");
-  const [sort, setSort] = useState("low");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // --- Filtering + Sorting ---
-  const filteredProducts = useMemo(() => {
-    let list = [...products];
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-    // Search filter
-    if (search.trim() !== "") {
-      list = list.filter((p) =>
-        p.name.toLowerCase().includes(search.toLowerCase()),
-      );
+    try {
+      setLoading(true);
+      const res = await searchProduct(search);
+
+      console.log(res.data);
+      setProducts(res.data.ranked);
+    } catch (err: any) {
+      const message =
+        err?.response?.data?.message || err?.message || "An error occurred";
+    } finally {
+      setLoading(false);
     }
-
-    // Category filter
-    if (category !== "All") {
-      list = list.filter((p) => p.category === category);
-    }
-
-    // Sorting
-    if (sort === "low") {
-      list.sort((a, b) => a.price - b.price);
-    } else {
-      list.sort((a, b) => b.price - a.price);
-    }
-
-    return list;
-  }, [search, category, sort]);
-
+  };
   return (
     <main className="max-w-6xl mx-auto px-6">
       <Hero />
+      <form onSubmit={handleSearch} className="flex justify-center mt-8 px-4">
+        <div className="w-full sm:w-[620px] bg-white rounded-2xl shadow-sm flex flex-col sm:flex-row overflow-hidden">
+          <input
+            type="text"
+            placeholder="Search for a product… (e.g. “iPhone 13 Case”)"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 px-5 py-4 outline-none text-gray-700"
+            required
+          />
+          {!loading ? (
+            <button
+              type="submit"
+              className="px-6 py-4 bg-primary cursor-pointer text-white font-medium text-sm w-full sm:w-auto hover:bg-primary-dark"
+            >
+              Compare
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="px-6 py-4 bg-primary-dark cursor-not-allowed  text-white font-medium text-sm w-full sm:w-auto "
+            >
+              Loading ...
+            </button>
+          )}
+        </div>
+      </form>
 
-      <SearchBar value={search} onChange={setSearch} />
-
-      <Filters
-        category={category}
-        onCategoryChange={setCategory}
-        sort={sort}
-        onSortChange={setSort}
-      />
-
-      <ProductGrid products={filteredProducts} />
+      <ProductGrid products={products} />
     </main>
   );
 }
