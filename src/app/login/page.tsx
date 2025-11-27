@@ -39,7 +39,7 @@ const LoginPage = () => {
       <h1 className="text-6xl font-bold text-[#1F2937] mb-12">Log in</h1>
 
       <form action="" onSubmit={handleSubmit} className="flex justify-center">
-        <div className="w-full flex flex-col gap-4 ">
+        <div className="w-full max-w-[600px] flex flex-col gap-6">
           {error && (
             <p className="text-red-500 bg-red-100 p-2 rounded-md">{error}</p>
           )}
@@ -73,11 +73,7 @@ const LoginPage = () => {
             />
           </div>
           <div>
-            <button
-              className=" bg-primary text-2xl p-4 w-full  sm:w-1/2 text-white cursor-pointer
-                rounded-xl hover:bg-primary-dark"
-              type="submit"
-            >
+            <button className="btn-form" type="submit">
               {loading ? "Loading...." : "Log in"}
             </button>
           </div>

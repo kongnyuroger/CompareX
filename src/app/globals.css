@@ -69,7 +69,7 @@
     @apply bg-white rounded-2xl shadow-md p-6;
   }
 
-  .form-button{
+  .btn-form{
     @apply w-full bg-primary text-white text-xl font-medium py-4 rounded-lg hover:bg-primary-dark transition-colors duration-200
   }
 

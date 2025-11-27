@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Bars } from "react-loader-spinner";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
 import { searchProduct } from "./services/api";
@@ -29,7 +30,10 @@ export default function HomePage() {
   return (
     <main className=" px-6">
       <Hero />
-      <form onSubmit={handleSearch} className="flex justify-center mt-8 px-4">
+      <form
+        onSubmit={handleSearch}
+        className="flex justify-center mt-8  mb-12 px-4"
+      >
         <div className="w-full sm:w-[620px] bg-white rounded-2xl shadow-sm flex flex-col sm:flex-row overflow-hidden">
           <input
             type="text"
@@ -56,8 +60,21 @@ export default function HomePage() {
           )}
         </div>
       </form>
-
-      <ProductGrid products={products} />
+      {loading ? (
+        <div className="flex justify-center mt-6">
+          <Bars
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      ) : (
+        <ProductGrid products={products} />
+      )}
     </main>
   );
 }

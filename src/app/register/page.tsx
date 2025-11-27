@@ -93,10 +93,7 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <button
-              className="w-full bg-[#4F46E5] text-white text-xl font-medium py-4 rounded-lg hover:bg-[#4338CA] transition-colors duration-200"
-              type="submit"
-            >
+            <button className="btn-form" type="submit">
               {(loading && <h1>Loading...</h1>) || <h1>Sign up</h1>}
             </button>
           </div>
