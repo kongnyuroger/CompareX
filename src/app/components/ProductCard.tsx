@@ -24,7 +24,7 @@ export default function ProductCard({
         width={180}
         height={180}
         alt={name}
-        className="mx-auto"
+        className="mx-auto w-[200px] h-[200px] object-contain"
       />
 
       <h3 className="mt-6 font-medium text-primary-900">{name}</h3>
