@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { Bars } from "react-loader-spinner";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
 import { searchProduct } from "./services/api";
@@ -9,6 +10,7 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -22,14 +24,18 @@ export default function HomePage() {
     } catch (err: any) {
       const message =
         err?.response?.data?.message || err?.message || "An error occurred";
+      setError(message);
     } finally {
       setLoading(false);
     }
   };
   return (
-    <main className="max-w-6xl mx-auto px-6">
+    <main className=" px-6">
       <Hero />
-      <form onSubmit={handleSearch} className="flex justify-center mt-8 px-4">
+      <form
+        onSubmit={handleSearch}
+        className="flex justify-center mt-8  mb-12 px-4"
+      >
         <div className="w-full sm:w-[620px] bg-white rounded-2xl shadow-sm flex flex-col sm:flex-row overflow-hidden">
           <input
             type="text"
@@ -56,8 +62,23 @@ export default function HomePage() {
           )}
         </div>
       </form>
-
-      <ProductGrid products={products} />
+      {loading ? (
+        <div className="flex justify-center mt-6">
+          <Bars
+            height="80"
+            width="80"
+            color="#4fa94d"
+            ariaLabel="bars-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+            visible={true}
+          />
+        </div>
+      ) : error ? (
+        <p className="text-error text-center">{error}</p>
+      ) : (
+        <ProductGrid products={products} />
+      )}
     </main>
   );
 }

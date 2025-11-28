@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8080",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 });
 
 API.interceptors.request.use((req) => {
@@ -21,4 +21,4 @@ export const loginUser = (emailOrUsername, password) =>
   API.post("/auth/login", { emailOrUsername, password });
 
 export const searchProduct = (searchTerm) =>
-  API.get(`/ai/rank?q=${searchTerm}`);
+  API.get(`/ai/rank?q=${encodeURIComponent(searchTerm)}`);

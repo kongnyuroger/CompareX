@@ -30,11 +30,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <UserContextProvider>
-          <Navbar />
-          {children}
-        </UserContextProvider>
-        <Toaster />
+        <div className="">
+          <UserContextProvider>
+            <Navbar />
+            {children}
+          </UserContextProvider>
+          <Toaster />
+        </div>
       </body>
     </html>
   );
