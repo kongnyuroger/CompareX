@@ -63,10 +63,11 @@ export default function HomePage() {
           )}
         </div>
       </form>
-      <div className="flex justify-center mb-12"></div>
 
       {loading ? (
-        <AILoadingComponent />
+        <div className="flex justify-center mb-12">
+          <AILoadingComponent />
+        </div>
       ) : error ? (
         <p className="text-error text-center">{error}</p>
       ) : (

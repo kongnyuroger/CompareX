@@ -7,7 +7,7 @@ interface Props {
   badge: string;
   badgeColor: string;
   imageUrl: string;
-  source: string[];
+  source: string;
   productUrl: string;
 }
 
@@ -27,7 +27,7 @@ export default function ProductCard({
         src={imageUrl}
         width={180}
         height={180}
-        alt={imageUrl}
+        alt={title}
         className="mx-auto w-[200px] h-[200px] object-contain"
       />
 
