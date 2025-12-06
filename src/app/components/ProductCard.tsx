@@ -50,7 +50,7 @@ export default function ProductCard({
         onClick={() => {
           router.push(productUrl);
         }}
-        className="btn-primary"
+        className="btn-primary w-full"
       >
         View
       </button>
