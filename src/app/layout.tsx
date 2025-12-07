@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { UserContextProvider } from "../lib/authProvider";
 import Navbar from "./components/Navbar";
@@ -35,6 +36,11 @@ export default function RootLayout({
             <Navbar />
             {children}
           </UserContextProvider>
+          <Script
+            src="https://apis.google.com/js/platform.js"
+            async
+            defer
+          ></Script>
           <Toaster />
         </div>
       </body>
