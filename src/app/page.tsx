@@ -1,11 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bars } from "react-loader-spinner";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
-import { searchProduct } from "./services/api";
+import { searchProduct, trendingProducts } from "./services/api";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
@@ -30,6 +30,23 @@ export default function HomePage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await trendingProducts();
+        console.log(res);
+        setProducts(res.data);
+      } catch (err: any) {
+        const message =
+          err?.response?.data?.message || err?.message || "An error occurred";
+        setError(message);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <main className=" px-6">
       <Hero />
@@ -63,11 +80,11 @@ export default function HomePage() {
           )}
         </div>
       </form>
-      <div className="flex justify-center mb-12">
-        <AILoadingComponent />
-      </div>
+
       {loading ? (
-        <h1 className="text-center text-gray-600">Loading...</h1>
+        <div className="flex justify-center mb-12">
+          <AILoadingComponent />
+        </div>
       ) : error ? (
         <p className="text-error text-center">{error}</p>
       ) : (
