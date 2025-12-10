@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Bars } from "react-loader-spinner";
+import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
 import { searchProduct } from "./services/api";
@@ -62,17 +63,10 @@ export default function HomePage() {
           )}
         </div>
       </form>
+
       {loading ? (
-        <div className="flex justify-center mt-6">
-          <Bars
-            height="80"
-            width="80"
-            color="#4fa94d"
-            ariaLabel="bars-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-            visible={true}
-          />
+        <div className="flex justify-center mb-12">
+          <AILoadingComponent />
         </div>
       ) : error ? (
         <p className="text-error text-center">{error}</p>

@@ -1,0 +1,75 @@
+{
+  "v": "5.5.9",
+  "meta": {
+    "bodymovin": "LottieFiles Placeholder"
+  },
+  "nm": "Placeholder Lottie Animation",
+  "ddd": 0,
+  "assets": [],
+  "layers": [
+    {
+      "ty": 4,
+      "nm": "Loading Dot 1",
+      "ind": 1,
+      "st": 0,
+      "sr": 1,
+      "ks": {
+        "o": {
+          "a": 0,
+          "k": 100
+        },
+        "r": {
+          "a": 0,
+          "k": 0
+        },
+        "p": {
+          "a": 0,
+          "k": [100, 100, 0]
+        },
+        "s": {
+          "a": 0,
+          "k": [100, 100, 100]
+        }
+      },
+      "shapes": [
+        {
+          "ty": "gr",
+          "nm": "Circle",
+          "it": [
+            {
+              "ty": "el",
+              "p": {
+                "a": 0,
+                "k": [0, 0]
+              },
+              "s": {
+                "a": 0,
+                "k": [10, 10]
+              },
+              "nm": "Ellipse Path",
+              "hd": false
+            },
+            {
+              "ty": "fl",
+              "c": {
+                "a": 0,
+                "k": [1, 1, 1, 1]
+              },
+              "o": {
+                "a": 0,
+                "k": 100
+              },
+              "nm": "Fill",
+              "hd": false
+            }
+          ]
+        }
+      ]
+    }
+    
+  ],
+  "op": 60,
+  "fr": 30,
+  "w": 200,
+  "h": 200
+}
