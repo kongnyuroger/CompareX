@@ -82,7 +82,7 @@ export default function HomePage() {
   };
 
   return (
-    <main className="px-6">
+    <main className="px-2">
       <Hero />
       <div className="max-w-4xl mx-auto mt-8 mb-12">
         <form onSubmit={handleSearch}>
@@ -119,17 +119,17 @@ export default function HomePage() {
       ) : currentProducts.length >= 1 ? (
         <div>
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-0">
               Search Results
             </h2>
             <ProductGrid products={currentProducts} />
           </div>
 
-          {/* <Pagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-          /> */}
+          />
         </div>
       ) : null}
     </main>

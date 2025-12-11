@@ -6,7 +6,7 @@ interface Props {
 
 export default function ProductGrid({ products }: Props) {
   return (
-    <div className="flex flex-wrap gap-6 mt-10 px-4 sm:px-0 justify-center lg:justify-start">
+    <div className="flex flex-wrap gap-6 mt-3 px-4 sm:px-0 justify-center lg:justify-start">
       {products.map((p) => (
         <ProductCard key={p.id} {...p} />
       ))}

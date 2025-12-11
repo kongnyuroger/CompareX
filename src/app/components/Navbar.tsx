@@ -10,14 +10,14 @@ export default function Navbar() {
   const navigate = useRouter();
 
   return (
-    <nav className="sticky top-10 z-50 w-full flex items-center justify-between mb-30">
+    <nav className="sticky top-0 py-3 z-50 w-full flex items-center bg-background justify-between mb-5">
       <SidebarTrigger className="md:hidden">
         <Menu />
       </SidebarTrigger>
       {/* Updated container for centering logo on mobile */}
       <div className="w-full md:w-auto flex justify-center md:justify-start">
-        <Link className="text-2xl font-semibold text-primary-900" href="/">
-          <span className="text-4xl text-primary">C</span>ompareX
+        <Link className="text-xl font-semibold text-primary-900" href="/">
+          <span className="text-2xl text-primary">C</span>ompareX
         </Link>
       </div>
 
