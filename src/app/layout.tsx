@@ -43,7 +43,7 @@ export default function RootLayout({
             defer
           ></Script>
           <Toaster />
-        </di>
+        </div>
       </body>
     </html>
   );

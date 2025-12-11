@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Bars } from "react-loader-spinner";
+import { useEffect, useState } from "react";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import ProductGrid from "./components/ProductGrid";
@@ -63,9 +62,12 @@ export default function HomePage() {
         const res = await trendingProducts();
         console.log(res);
         setProducts(res.data);
-      } catch (err: any) {
+      } catch (err: unknown) {
+        const apiError = err as ApiError;
         const message =
-          err?.response?.data?.message || err?.message || "An error occurred";
+          apiError?.response?.data?.message ||
+          apiError?.message ||
+          "An error occurred";
         setError(message);
       }
     };
@@ -75,7 +77,6 @@ export default function HomePage() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    // Scroll to top of products section
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
 
@@ -92,7 +93,7 @@ export default function HomePage() {
   };
 
   return (
-    <>
+    <main className="px-6">
       <Hero />
       <div className="max-w-4xl mx-auto mt-8 mb-12">
         <form onSubmit={handleSearch}>
@@ -112,16 +113,9 @@ export default function HomePage() {
             >
               {loading ? "Searching..." : "Compare"}
             </button>
-          ) : (
-            <button
-              type="button"
-              className="px-6 py-4 bg-primary-dark cursor-not-allowed  text-white font-medium text-sm w-full sm:w-auto "
-            >
-              Loading ...
-            </button>
-          )}
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
 
       {loading ? (
         <div className="flex justify-center mb-12">
@@ -133,16 +127,14 @@ export default function HomePage() {
             {error}
           </p>
         </div>
-      ) : products.length > 0 ? (
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">
-            Search Results
-          </h2>
-          <ProductGrid products={products} />
-        </div>
-      ) : (
-        <>
-          <ProductGrid products={currentProducts} />
+      ) : currentProducts.length >= 1 ? (
+        <div>
+          <div className="max-w-6xl mx-auto">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
+              Search Results
+            </h2>
+            <ProductGrid products={currentProducts} />
+          </div>
 
           {/* Pagination Controls */}
           {products.length > productsPerPage && (
@@ -193,8 +185,8 @@ export default function HomePage() {
               </button>
             </div>
           )}
-        </>
-      )}
-    </>
+        </div>
+      ) : null}
+    </main>
   );
 }
