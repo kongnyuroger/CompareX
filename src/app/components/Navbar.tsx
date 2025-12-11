@@ -1,6 +1,8 @@
 "use client";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useUserContext } from "@/lib/authProvider";
 
 export default function Navbar() {
@@ -9,6 +11,9 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-10 z-50 w-full flex items-center justify-between mb-30">
+      <SidebarTrigger className="md:hidden">
+        <Menu />
+      </SidebarTrigger>
       {/* Updated container for centering logo on mobile */}
       <div className="w-full md:w-auto flex justify-center md:justify-start">
         <Link className="text-2xl font-semibold text-primary-900" href="/">
