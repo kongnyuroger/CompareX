@@ -125,11 +125,11 @@ export default function HomePage() {
             <ProductGrid products={currentProducts} />
           </div>
 
-          <Pagination
+          {/* <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-          />
+          /> */}
         </div>
       ) : null}
     </main>
