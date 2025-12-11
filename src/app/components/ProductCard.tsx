@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface Props {
@@ -21,36 +20,49 @@ export default function ProductCard({
   productUrl,
 }: Props) {
   const router = useRouter();
+
   return (
-    <div className="bg-white shadow-sm rounded-2xl p-6 flex flex-col items-center text-center">
-      <img
-        src={imageUrl}
-        width={180}
-        height={180}
-        alt={title}
-        className="mx-auto w-[200px] h-[200px] object-contain"
-      />
+    <div className="bg-white shadow-sm rounded-2xl p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] min-w-[280px] max-w-[380px]">
+      {/* Fixed height image container */}
+      <div className="w-full h-[200px] flex items-center justify-center mb-6">
+        <img
+          src={imageUrl}
+          width={180}
+          height={180}
+          alt={title}
+          className="w-full h-full object-contain"
+        />
+      </div>
 
-      <h3 className="mt-6 font-medium text-primary-900">{title}</h3>
+      {/* Fixed height title container */}
+      <div className="h-[48px] flex items-center justify-center mb-2 w-full">
+        <h3 className="font-medium text-primary-900 line-clamp-2 text-sm">
+          {title}
+        </h3>
+      </div>
 
-      <p className="text-3xl font-semibold mt-2">${price}</p>
+      {/* Price - fixed position */}
+      <p className="text-3xl font-semibold mb-2">${price}</p>
 
-      <p
-        className={`mt-2 px-3 py-1 rounded-lg text-xs font-medium inline-block ${badgeColor}`}
-      >
-        {badge}
-      </p>
+      {/* Badge - fixed height */}
+      <div className="h-[28px] flex items-center justify-center mb-4">
+        <p className={`px-3 py-1 rounded-lg text-xs font-medium ${badgeColor}`}>
+          {badge}
+        </p>
+      </div>
 
-      <div className="flex items-center justify-center gap-3 mt-4">
+      {/* Source - fixed height */}
+      <div className="h-[24px] flex items-center justify-center gap-3 mb-4">
         {source}
       </div>
 
+      {/* Button - always at bottom */}
       <button
         type="button"
         onClick={() => {
           router.push(productUrl);
         }}
-        className="btn-primary w-full"
+        className="btn-primary w-full mt-auto"
       >
         View
       </button>
