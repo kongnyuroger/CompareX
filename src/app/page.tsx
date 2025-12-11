@@ -12,12 +12,24 @@ export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 6;
+
+  // Calculate pagination values
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct,
+  );
+  const totalPages = Math.ceil(products.length / productsPerPage);
 
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
       setLoading(true);
+      setCurrentPage(1);
       const res = await searchProduct(search);
 
       console.log(res.data);
@@ -46,6 +58,24 @@ export default function HomePage() {
 
     fetchData();
   }, []);
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+    // Scroll to top of products section
+    window.scrollTo({ top: 400, behavior: "smooth" });
+  };
+
+  const handlePrevious = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1);
+    }
+  };
 
   return (
     <main className=" px-6">
@@ -88,7 +118,59 @@ export default function HomePage() {
       ) : error ? (
         <p className="text-error text-center">{error}</p>
       ) : (
-        <ProductGrid products={products} />
+        <>
+          <ProductGrid products={currentProducts} />
+
+          {/* Pagination Controls */}
+          {products.length > productsPerPage && (
+            <div className="flex justify-center items-center gap-2 mt-8 mb-12">
+              <button
+                onClick={handlePrevious}
+                type="button"
+                disabled={currentPage === 1}
+                className={`px-4 py-2 rounded-lg font-medium ${
+                  currentPage === 1
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-primary border border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                Previous
+              </button>
+
+              <div className="flex gap-2">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (pageNum) => (
+                    <button
+                      key={pageNum}
+                      type="button"
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`w-10 h-10 rounded-lg font-medium ${
+                        currentPage === pageNum
+                          ? "bg-primary text-white"
+                          : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  ),
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={currentPage === totalPages}
+                className={`px-4 py-2 rounded-lg font-medium ${
+                  currentPage === totalPages
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                    : "bg-white text-primary border border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          )}
+        </>
       )}
     </main>
   );
