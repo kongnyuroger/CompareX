@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
+import Pagination from "./components/Pagination";
 import ProductGrid from "./components/ProductGrid";
 import { searchProduct, trendingProducts } from "./services/api";
 
@@ -80,18 +81,6 @@ export default function HomePage() {
     window.scrollTo({ top: 400, behavior: "smooth" });
   };
 
-  const handlePrevious = () => {
-    if (currentPage > 1) {
-      handlePageChange(currentPage - 1);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentPage < totalPages) {
-      handlePageChange(currentPage + 1);
-    }
-  };
-
   return (
     <main className="px-6">
       <Hero />
@@ -136,55 +125,11 @@ export default function HomePage() {
             <ProductGrid products={currentProducts} />
           </div>
 
-          {/* Pagination Controls */}
-          {products.length > productsPerPage && (
-            <div className="flex justify-center items-center gap-2 mt-8 mb-12">
-              <button
-                onClick={handlePrevious}
-                type="button"
-                disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  currentPage === 1
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-primary border border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                Previous
-              </button>
-
-              <div className="flex gap-2">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (pageNum) => (
-                    <button
-                      key={pageNum}
-                      type="button"
-                      onClick={() => handlePageChange(pageNum)}
-                      className={`w-10 h-10 rounded-lg font-medium ${
-                        currentPage === pageNum
-                          ? "bg-primary text-white"
-                          : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-                      }`}
-                    >
-                      {pageNum}
-                    </button>
-                  ),
-                )}
-              </div>
-
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={currentPage === totalPages}
-                className={`px-4 py-2 rounded-lg font-medium ${
-                  currentPage === totalPages
-                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-primary border border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                Next
-              </button>
-            </div>
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       ) : null}
     </main>
