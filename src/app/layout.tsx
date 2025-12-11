@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google"; // Changed from Inter
 import "./globals.css";
+import Script from "next/script";
 import { Toaster } from "@/components/ui/sonner";
 import { LayoutContextProvider } from "@/lib/layoutProvider";
 import { UserContextProvider } from "../lib/authProvider";
@@ -35,7 +36,14 @@ export default function RootLayout({
             <LayoutContextProvider>{children}</LayoutContextProvider>
             <Toaster />
           </UserContextProvider>
-        </div>
+
+          <Script
+            src="https://apis.google.com/js/platform.js"
+            async
+            defer
+          ></Script>
+          <Toaster />
+        </di>
       </body>
     </html>
   );
