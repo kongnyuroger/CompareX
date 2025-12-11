@@ -20,5 +20,7 @@ export const register = (username, email, password) =>
 export const loginUser = (emailOrUsername, password) =>
   API.post("/auth/login", { emailOrUsername, password });
 
+export const trendingProducts = () => API.get(`/search/trending`);
+
 export const searchProduct = (searchTerm) =>
   API.get(`/ai/rank?q=${encodeURIComponent(searchTerm)}`);
