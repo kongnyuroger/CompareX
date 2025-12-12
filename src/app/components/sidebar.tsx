@@ -33,7 +33,10 @@ export function SearchHistorySidebar() {
   if (!isLoggedIn) return null;
 
   return (
-    <Sidebar className="mt-10" collapsible="icon">
+    <Sidebar
+      className="w-[calc(var(--sidebar-width)+40px)] p-4"
+      collapsible="icon"
+    >
       <SidebarHeader
         className={`flex items-center mb-6 ${
           isCollapsed ? "justify-center" : "justify-between"
