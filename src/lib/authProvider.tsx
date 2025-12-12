@@ -2,11 +2,26 @@
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
+type Product = {
+  id: string;
+  title: string;
+  price: number;
+  badge: string;
+  badgeColor: string;
+  imageUrl: string;
+  source: string;
+  productUrl: string;
+};
+
 type UserContextProviderprop = {
   token: string | null;
   login: (token: string | null) => void;
   logout: () => void;
   loading: boolean;
+  products: Product[];
+  setProducts: (products: Product[]) => void;
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
 };
 
 const UserContext = createContext<UserContextProviderprop>({
@@ -14,6 +29,10 @@ const UserContext = createContext<UserContextProviderprop>({
   login: () => {},
   logout: () => {},
   loading: false,
+  products: [],
+  setProducts: () => {},
+  currentPage: 1,
+  setCurrentPage: () => {},
 });
 
 export function UserContextProvider({
@@ -23,6 +42,8 @@ export function UserContextProvider({
 }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const router = useRouter();
 
   useEffect(() => {
@@ -47,7 +68,18 @@ export function UserContextProvider({
   };
 
   return (
-    <UserContext.Provider value={{ token, login, logout, loading }}>
+    <UserContext.Provider
+      value={{
+        token,
+        login,
+        logout,
+        loading,
+        products,
+        setProducts,
+        currentPage,
+        setCurrentPage,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
