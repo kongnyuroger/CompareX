@@ -44,7 +44,11 @@ export default function HomePage() {
       setError("");
       setCurrentPage(1);
       const res = await searchProduct(search);
-      setProducts(res.data.ranked || []);
+      const totalProduct = [
+        ...res.data.rankedProducts,
+        ...res.data.otherProducts,
+      ];
+      setProducts(totalProduct || []);
     } catch (err: unknown) {
       const apiError = err as ApiError;
       const message =
