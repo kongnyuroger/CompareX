@@ -42,7 +42,7 @@ export function LayoutContextProvider({
         } ${isLoggedIn ? "" : "w-full"}`}
       >
         <Navbar />
-        <main className="flex-1 p-4 md:p-6 lg:p-8">
+        <main className="flex-1 p-4 ">
           <div className="max-w-6xl mx-auto">{children}</div>
         </main>
       </div>

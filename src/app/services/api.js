@@ -23,4 +23,14 @@ export const loginUser = (emailOrUsername, password) =>
 export const trendingProducts = () => API.get(`/search/trending`);
 
 export const searchProduct = (searchTerm) =>
-  API.get(`/ai/rank?q=${encodeURIComponent(searchTerm)}`);
+  API.get(`/search?q=${encodeURIComponent(searchTerm)}`);
+
+export const searchHistory = () => API.get(`/search/history`);
+
+export const searchHistoryById = (searchId) =>
+  API.get(`/search/history/${searchId}`);
+
+export const deleteSearchHistoryItem = (searchId) =>
+  API.delete(`/search/history/${searchId}`);
+
+export const clearSearchHistory = () => API.delete(`/search/history`);

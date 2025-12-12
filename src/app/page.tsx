@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useUserContext } from "@/lib/authProvider";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import Pagination from "./components/Pagination";
@@ -18,10 +19,10 @@ interface ApiError {
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
-  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const { products, setProducts, currentPage, setCurrentPage } =
+    useUserContext();
   const productsPerPage = 6;
 
   // Calculate pagination values
@@ -74,7 +75,7 @@ export default function HomePage() {
     };
 
     fetchData();
-  }, []);
+  }, [setProducts]);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -125,11 +126,11 @@ export default function HomePage() {
             <ProductGrid products={currentProducts} />
           </div>
 
-          {/* <Pagination
+          <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={handlePageChange}
-          /> */}
+          />
         </div>
       ) : null}
     </main>

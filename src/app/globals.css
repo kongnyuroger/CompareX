@@ -44,7 +44,7 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-primary text-white font-medium cursor-pointer px-6 h-12 rounded-xl;
+    @apply bg-primary text-white font-medium  cursor-pointer px-6 h-12 rounded-xl;
   }
   .btn-primary:hover {
     background: var(--color-primary-dark);
@@ -111,7 +111,7 @@ button[data-sidebar-trigger] {
 }
 
 body {
-  @apply bg-background p-3 sm:p-10 max-w-[1440px] m-auto;
+  @apply bg-background  max-w-[1440px] m-auto;
 }
 
 html {

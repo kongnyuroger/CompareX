@@ -19,8 +19,6 @@ export default function ProductCard({
   source,
   productUrl,
 }: Props) {
-  const router = useRouter();
-
   return (
     <div className="bg-white shadow-sm rounded-2xl p-6 flex flex-col items-center text-center w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] min-w-[280px] max-w-[380px]">
       {/* Fixed height image container */}
@@ -57,15 +55,14 @@ export default function ProductCard({
       </div>
 
       {/* Button - always at bottom */}
-      <button
-        type="button"
-        onClick={() => {
-          router.push(productUrl);
-        }}
-        className="btn-primary w-full mt-auto"
+      <a
+        href={productUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className=" bg-primary text-white font-medium  cursor-pointer px-6 h-12 rounded-xl flex items-center justify-center w-full hover:bg-primary-dark transition-colors"
       >
         View
-      </button>
+      </a>
     </div>
   );
 }
