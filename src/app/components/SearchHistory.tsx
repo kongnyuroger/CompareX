@@ -1,6 +1,6 @@
 "use client";
 
-import { Clock, Search, X } from "lucide-react";
+import { Clock, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   clearSearchHistory,
@@ -153,58 +153,84 @@ export default function SearchHistory() {
               </div>
             ) : (
               !loading && (
-                <div className="space-y-2">
-                  {historyItems.map((item) => (
-                    <button
-                      type="button"
-                      key={item._id}
-                      onClick={() => handleSearch(item.query, item.searchId)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          e.preventDefault();
-                          handleSearch(item.query, item.searchId);
-                        }
-                      }}
-                      className={`w-full text-left p-3 rounded-lg transition-all duration-200 border ${
-                        activeItem === item.searchId
-                          ? "bg-blue-50 border-blue-200 shadow-sm"
-                          : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300"
-                      }`}
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                <Search className="w-4 h-4 text-blue-600" />
-                              </div>
-                              <div className="min-w-0">
-                                <p className="font-medium text-gray-900 truncate">
-                                  {item.query}
-                                </p>
-                                <div className="flex items-center gap-3 mt-1">
-                                  <span className="text-xs text-gray-500">
-                                    {formatTimeAgo(item.createdAt)}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                <div>
+                  {historyItems.map((item) => {
+                    const isActive = activeItem === item.searchId;
 
-                        <button
-                          type="button"
-                          onClick={(e) =>
-                            handleClearItem(item._id, item.searchId, e)
+                    return (
+                      <button
+                        type="button"
+                        key={item._id}
+                        // role="button"
+                        // tabIndex={0}
+                        onClick={() => {
+                          setActiveItem(item.searchId);
+                          handleSearch(item.query, item.searchId);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setActiveItem(item.searchId);
+                            handleSearch(item.query, item.searchId);
                           }
-                          className="opacity-70 hover:opacity-100 transition-opacity p-1.5 hover:bg-gray-100 rounded ml-2 flex-shrink-0"
-                          aria-label="Remove search"
-                        >
-                          <X className="w-4 h-4 text-gray-400 hover:text-red-600" />
-                        </button>
-                      </div>
-                    </button>
-                  ))}
+                        }}
+                        className={`
+                      group
+                      w-full cursor-pointer rounded-lg p-2
+                      transition-all duration-200
+                      border
+                      focus:outline-none focus:ring-2 focus:ring-gray-400
+
+                      ${
+                        isActive
+                          ? "bg-gray-100 border-gray-300 shadow-sm"
+                          : "border-transparent hover:border-gray-300 hover:bg-gray-50"
+                      }
+                    `}
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          {/* Text stack */}
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className={`
+                            truncate font-medium leading-tight
+                            ${isActive ? "text-gray-900" : "text-gray-800"}
+                          `}
+                            >
+                              {item.query}
+                            </p>
+
+                            <span className="block text-xs text-gray-500 leading-tight">
+                              {formatTimeAgo(item.createdAt)}
+                            </span>
+                          </div>
+
+                          {/* Remove button */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleClearItem(item._id, item.searchId, e);
+                            }}
+                            aria-label="Remove search"
+                            className={`
+                          p-1.5 rounded flex-shrink-0
+                          transition-opacity duration-150
+                          hover:bg-red-50
+
+                          ${
+                            isActive
+                              ? "opacity-100"
+                              : "opacity-0 group-hover:opacity-100"
+                          }
+                        `}
+                          >
+                            <X className="h-4 w-4 text-gray-400 hover:text-red-600" />
+                          </button>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )
             )}
@@ -215,11 +241,6 @@ export default function SearchHistory() {
       {/* Footer Actions */}
       {state !== "collapsed" && historyItems.length > 0 && !loading && (
         <div className="pt-6 mt-6 border-t border-gray-200">
-          <div className="text-center mb-4">
-            <p className="text-sm text-gray-500">
-              Click on any search to see results again
-            </p>
-          </div>
           <button
             type="button"
             onClick={handleClearAll}

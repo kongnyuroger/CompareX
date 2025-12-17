@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Menu, Search, User } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 import SearchHistory from "@/app/components/SearchHistory";
 import {
   Sidebar,
@@ -45,8 +45,7 @@ export function SearchHistorySidebar() {
         <div className="flex">
           {!isCollapsed && (
             <div>
-              <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                <Search className="w-5 h-5" />
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                 Search History
               </h2>
               <p className="text-sm text-gray-500 mt-1">
