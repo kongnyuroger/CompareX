@@ -1,12 +1,21 @@
+// app/page.tsx
+
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "@/lib/authProvider";
+import {
+  type StreamComplete,
+  type StreamError,
+  type StreamedProduct,
+  type StreamStats,
+  searchStreamService,
+} from "@/services/searchStreamService";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import Pagination from "./components/Pagination";
 import ProductGrid from "./components/ProductGrid";
-import { searchProduct, trendingProducts } from "./services/api";
+import { trendingProducts } from "./services/api";
 
 interface ApiError {
   response?: {
@@ -21,8 +30,12 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [searchId, setSearchId] = useState<string | null>(null);
+  const [streamStats, setStreamStats] = useState<StreamStats | null>(null);
   const { products, setProducts, currentPage, setCurrentPage } =
     useUserContext();
+
+  const cancelSearchRef = useRef<(() => void) | null>(null);
   const productsPerPage = 6;
 
   // Calculate pagination values
@@ -34,52 +47,117 @@ export default function HomePage() {
   );
   const totalPages = Math.ceil(products.length / productsPerPage);
 
-  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+  /**
+   * Handle streaming search
+   */ const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!search.trim()) return;
+
+    // Cancel any existing search
+    if (cancelSearchRef.current) {
+      cancelSearchRef.current();
+    }
 
     try {
       setLoading(true);
       setError("");
       setCurrentPage(1);
-      const res = await searchProduct(search);
-      const totalProduct = [
-        ...res.data.rankedProducts,
-        ...res.data.otherProducts,
-      ];
-      setProducts(totalProduct || []);
+      setProducts([]);
+      setSearchId(null);
+      setStreamStats(null);
+
+      // Start streaming
+      const { searchId: newSearchId, cancel } =
+        await searchStreamService.streamSearch(search, {
+          onProduct: (newProducts: StreamedProduct[], sid: string) => {
+            console.log(`Received ${newProducts.length} products from ${sid}`);
+
+            setSearchId(sid);
+
+            setProducts((prevProducts) => {
+              const existingIds = new Set(prevProducts.map((p) => p.id));
+              const uniqueNewProducts = newProducts.filter(
+                (p) => !existingIds.has(p.id),
+              );
+              return [...prevProducts, ...uniqueNewProducts];
+            });
+          },
+
+          onStats: (stats: StreamStats, sid: string) => {
+            console.log("Stream stats:", stats);
+            setSearchId(sid);
+            setStreamStats(stats);
+          },
+
+          onComplete: (summary: StreamComplete) => {
+            console.log("Search complete:", summary);
+            setLoading(false);
+            setSearchId(summary.searchId);
+          },
+
+          onError: (err: StreamError) => {
+            console.error("Stream error:", err);
+            setError(`Error from ${err.source}: ${err.error}`);
+          },
+        });
+
+      cancelSearchRef.current = cancel;
     } catch (err: unknown) {
       const apiError = err as ApiError;
       const message =
-        apiError?.response?.data?.message ||
         apiError?.message ||
-        "An error occurred";
-      setError(message);
+        apiError?.response?.data?.message ||
+        "Failed to connect to search service";
+
+      // Check if it's an authentication error
+      if (message.includes("Authentication") || message.includes("log in")) {
+        setError("Please log in to search for products");
+        // Optionally redirect to login page
+        // router.push('/login');
+      } else {
+        setError(message);
+      }
+
       setProducts([]);
-    } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Load trending products on mount
+   */
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await trendingProducts();
-        console.log(res);
-        setProducts(res.data);
+        console.log("Trending products:", res);
+        if (res.data && Array.isArray(res.data)) {
+          setProducts(res.data);
+        }
       } catch (err: unknown) {
         const apiError = err as ApiError;
         const message =
           apiError?.response?.data?.message ||
           apiError?.message ||
-          "An error occurred";
-        setError(message);
+          "Failed to load trending products";
+        console.error(message);
       }
     };
 
     fetchData();
   }, [setProducts]);
+
+  /**
+   * Cleanup on unmount
+   */
+  useEffect(() => {
+    return () => {
+      if (cancelSearchRef.current) {
+        cancelSearchRef.current();
+      }
+    };
+  }, []);
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
@@ -89,6 +167,8 @@ export default function HomePage() {
   return (
     <main className="px-6">
       <Hero />
+
+      {/* Search Bar */}
       <div className="max-w-4xl mx-auto mt-8 mb-12">
         <form onSubmit={handleSearch}>
           <div className="bg-white rounded-2xl shadow-sm flex flex-col sm:flex-row overflow-hidden border border-gray-100">
@@ -103,30 +183,64 @@ export default function HomePage() {
             <button
               type="submit"
               disabled={loading}
-              className={`px-8 py-4 ${loading ? "bg-primary-dark cursor-not-allowed" : "bg-primary cursor-pointer hover:bg-primary-dark"} text-white font-medium text-base transition-colors whitespace-nowrap`}
+              className={`px-8 py-4 ${
+                loading
+                  ? "bg-primary-dark cursor-not-allowed"
+                  : "bg-primary cursor-pointer hover:bg-primary-dark"
+              } text-white font-medium text-base transition-colors whitespace-nowrap`}
             >
               {loading ? "Searching..." : "Compare"}
             </button>
           </div>
         </form>
+
+        {/* Search Stats (Real-time) */}
+        {loading && streamStats && (
+          <div className="mt-4 text-center">
+            <p className="text-sm text-gray-600">
+              {Object.entries(streamStats.platformStats).map(
+                ([platform, stats]) => (
+                  <span key={platform} className="mx-2">
+                    {platform}: {stats.total} {stats.completed ? "✓" : "⏳"}
+                  </span>
+                ),
+              )}
+            </p>
+          </div>
+        )}
       </div>
 
-      {loading ? (
+      {/* Loading State */}
+      {loading && products.length === 0 && (
         <div className="flex justify-center mb-12">
           <AILoadingComponent />
         </div>
-      ) : error ? (
+      )}
+
+      {/* Error State */}
+      {error && (
         <div className="text-center py-8">
           <p className="text-error text-base bg-red-50 inline-block px-4 py-2 rounded-lg">
             {error}
           </p>
         </div>
-      ) : currentProducts.length >= 1 ? (
+      )}
+
+      {/* Products Grid */}
+      {currentProducts.length >= 1 && (
         <div>
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Search Results
-            </h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">
+                {loading
+                  ? `Found ${products.length} products (searching...)`
+                  : `Search Results (${products.length} products)`}
+              </h2>
+              {searchId && (
+                <p className="text-sm text-gray-500">Search ID: {searchId}</p>
+              )}
+            </div>
+
             <ProductGrid products={currentProducts} />
           </div>
 
@@ -136,7 +250,16 @@ export default function HomePage() {
             onPageChange={handlePageChange}
           />
         </div>
-      ) : null}
+      )}
+
+      {/* No Results */}
+      {!loading && !error && products.length === 0 && search && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 text-lg">
+            No products found for "{search}"
+          </p>
+        </div>
+      )}
     </main>
   );
 }
