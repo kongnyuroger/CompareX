@@ -36,7 +36,8 @@ export default function SearchHistory() {
     const fetchSearchHistory = async () => {
       try {
         const response = await getSearchHistory();
-        setHistoryItems(response.data.data);
+        console.log("Fetched search history:", response.data);
+        setHistoryItems(response.data.sessions);
       } catch (error) {
         console.error("Error fetching search history:", error);
       }
