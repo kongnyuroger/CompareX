@@ -132,8 +132,8 @@ export default function HomePage() {
       try {
         const res = await trendingProducts();
         console.log("Trending products:", res);
-        if (res.data && Array.isArray(res.data)) {
-          setProducts(res.data);
+        if (res.data && Array.isArray(res.data.data?.trending)) {
+          setProducts(res.data.data?.trending);
         }
       } catch (err: unknown) {
         const apiError = err as ApiError;
@@ -147,7 +147,7 @@ export default function HomePage() {
 
     fetchData();
   }, [setProducts]);
-
+  console.log("Current products:", products);
   /**
    * Cleanup on unmount
    */

@@ -20,15 +20,15 @@ export const register = (username, email, password) =>
 export const loginUser = (emailOrUsername, password) =>
   API.post("/auth/login", { emailOrUsername, password });
 
-export const trendingProducts = () => API.get(`/search/trending`);
+export const trendingProducts = () => API.get(`/searchHistory/trending`);
 
-export const searchProduct = (searchTerm) =>
-  API.get(`/searchHistory?q=${encodeURIComponent(searchTerm)}`);
+//export const searchProduct = (searchTerm) =>
+// API.get(`/searchHistory?q=${encodeURIComponent(searchTerm)}`);
 
 export const searchHistory = () => API.get(`/search/history`);
 
 export const searchHistoryById = (searchId) =>
-  API.get(`/search/history/${searchId}`);
+  API.get(`/search/results/${searchId}`);
 
 export const deleteSearchHistoryItem = (searchId) =>
   API.delete(`/searchHistory/history/${searchId}`);

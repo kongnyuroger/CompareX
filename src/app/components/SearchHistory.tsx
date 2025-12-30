@@ -73,12 +73,8 @@ export default function SearchHistory() {
     try {
       const response = await searchHistoryById(searchId);
       console.log("Search history item fetched:", response.data);
-      // Update products in context with the search results
-      const totalProduct = [
-        ...response.data.rankedProducts,
-        ...response.data.otherProducts,
-      ];
-      setProducts(totalProduct || []);
+
+      setProducts(response.data.rankedProducts || []);
 
       // Reset to first page
       setCurrentPage(1);
