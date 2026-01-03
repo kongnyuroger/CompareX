@@ -185,19 +185,19 @@ export default function SearchHistory() {
                       }
                     `}
                       >
-                        <div className="flex items-start justify-between gap-3">
+                        <div className="flex  justify-between gap-3">
                           {/* Text stack */}
                           <div className="min-w-0 flex-1">
                             <p
                               className={`
-                            truncate font-medium leading-tight
+                            truncate font-medium leading-tight text-start 
                             ${isActive ? "text-gray-900" : "text-gray-800"}
                           `}
                             >
                               {item.query}
                             </p>
 
-                            <span className="block text-xs text-gray-500 leading-tight">
+                            <span className="block text-xs text-start text-gray-500 leading-tight">
                               {formatTimeAgo(item.createdAt)}
                             </span>
                           </div>

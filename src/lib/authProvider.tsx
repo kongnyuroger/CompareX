@@ -1,4 +1,5 @@
 "use client";
+import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -55,6 +56,10 @@ export function UserContextProvider({
   const login = (newToken: string | null) => {
     if (newToken) {
       localStorage.setItem("token", newToken);
+      const decodedPayload = jwtDecode<{ username: string }>(newToken);
+      console.log("here is the decoded token:", decodedPayload);
+
+      localStorage.setItem("username", decodedPayload.username);
     } else {
       localStorage.removeItem("token");
     }

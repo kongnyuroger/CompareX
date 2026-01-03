@@ -14,6 +14,7 @@ import { useUserContext } from "@/lib/authProvider";
 
 export function SearchHistorySidebar() {
   const { token, logout, loading } = useUserContext();
+  const username = localStorage.getItem("username");
   const { state } = useSidebar();
 
   const isLoggedIn = !!token;
@@ -92,9 +93,7 @@ export function SearchHistorySidebar() {
               </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-700">
-                  User Account
-                </p>
+                <p className="text-sm font-medium text-gray-700">{username}</p>
                 <p className="text-xs text-gray-500">
                   {token ? "Logged In" : "Not Logged In"}
                 </p>
