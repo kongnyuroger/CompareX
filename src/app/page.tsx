@@ -131,9 +131,9 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const res = await trendingProducts();
-        console.log("Trending products:", res);
-        if (res.data && Array.isArray(res.data.data?.trending)) {
-          setProducts(res.data.data?.trending);
+        console.log("Trending products:", res.data.trending);
+        if (res.data && Array.isArray(res.data.trending)) {
+          setProducts(res.data.trending);
         }
       } catch (err: unknown) {
         const apiError = err as ApiError;
