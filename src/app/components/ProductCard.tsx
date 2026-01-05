@@ -26,15 +26,6 @@ export default function ProductCard({
     <div className="bg-white shadow-sm rounded-2xl p-6 pt-12 flex flex-col items-center text-center w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] min-w-[280px] max-w-[380px] relative">
       {/* Fixed height image container */}
       <div className="w-full h-[200px] flex items-center justify-center mb-6 relative">
-        {/* Shop logo */}
-        {shopLogo && (
-          <img
-            src={shopLogo}
-            alt={`${source} logo`}
-            className="h-6 w-auto object-contain mb-3 absolute top-0 left-5/6 transform -translate-x-1/2 -translate-y-1/2 bg-white p-1 rounded-1/2 shadow"
-          />
-        )}
-
         <img
           src={imageUrl}
           width={140}
@@ -43,6 +34,14 @@ export default function ProductCard({
           className="w-5/6 h-5/6 object-contain"
         />
       </div>
+      {/* Shop logo */}
+      {shopLogo && (
+        <img
+          src={shopLogo}
+          alt={`${source} logo`}
+          className="h-6 w-auto object-contain absolute top-7 right-0 transform -translate-x-1/2 -translate-y-1/2 bg-white p-1 rounded-1/2 shadow"
+        />
+      )}
 
       {/* Fixed height title container */}
       <div className="h-[48px] flex items-center justify-center mb-2 w-full">
