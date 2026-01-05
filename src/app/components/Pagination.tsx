@@ -45,7 +45,7 @@ export default function Pagination({
       </button>
 
       {/* Desktop: Page numbers - Show all on large screens */}
-      <div className="hidden lg:flex gap-2">
+      <div className="hidden lg:flex flex-wrap gap-2">
         {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
           <button
             key={pageNum}

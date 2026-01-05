@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, Menu, Search, User } from "lucide-react";
+import { LogOut, Menu, User } from "lucide-react";
 import SearchHistory from "@/app/components/SearchHistory";
 import {
   Sidebar,
@@ -14,6 +14,7 @@ import { useUserContext } from "@/lib/authProvider";
 
 export function SearchHistorySidebar() {
   const { token, logout, loading } = useUserContext();
+  const username = localStorage.getItem("username");
   const { state } = useSidebar();
 
   const isLoggedIn = !!token;
@@ -45,8 +46,7 @@ export function SearchHistorySidebar() {
         <div className="flex">
           {!isCollapsed && (
             <div>
-              <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                <Search className="w-5 h-5" />
+              <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
                 Search History
               </h2>
               <p className="text-sm text-gray-500 mt-1">
@@ -93,9 +93,7 @@ export function SearchHistorySidebar() {
               </div>
 
               <div>
-                <p className="text-sm font-medium text-gray-700">
-                  User Account
-                </p>
+                <p className="text-sm font-medium text-gray-700">{username}</p>
                 <p className="text-xs text-gray-500">
                   {token ? "Logged In" : "Not Logged In"}
                 </p>
