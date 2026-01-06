@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import RobotLoader from "../atoms/loader";
 
 export default function AILoadingComponent() {
@@ -31,6 +31,21 @@ export default function AILoadingComponent() {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [displayedText, setDisplayedText] = useState("");
   const [charIndex, setCharIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+
+  // Progressive delay mapping based on progress
+  const getDelayForProgress = useCallback((prog: number) => {
+    if (prog < 10) return 1500;
+    if (prog < 20) return 2000;
+    if (prog < 30) return 3000;
+    if (prog < 40) return 4000;
+    if (prog < 50) return 5000;
+    if (prog < 60) return 6000;
+    if (prog < 70) return 7000;
+    if (prog < 80) return 8000;
+    if (prog < 90) return 9000;
+    return 10000;
+  }, []);
 
   useEffect(() => {
     const currentMessage = messages[currentMessageIndex];
@@ -44,15 +59,18 @@ export default function AILoadingComponent() {
       return () => clearTimeout(timeout);
     } else {
       // Wait before moving to next message
+      const delay = getDelayForProgress(progress);
       const timeout = setTimeout(() => {
         setCurrentMessageIndex((currentMessageIndex + 1) % messages.length);
         setDisplayedText("");
         setCharIndex(0);
-      }, 1500); // Pause before next message
+        // Increment progress with diminishing returns
+        setProgress((prev) => Math.min(95, prev + (100 - prev) * 0.15));
+      }, delay); // Pause before next message
 
       return () => clearTimeout(timeout);
     }
-  }, [charIndex, currentMessageIndex]);
+  }, [charIndex, currentMessageIndex, progress, getDelayForProgress]);
 
   return (
     <div className="text-center p-8   max-w-md w-full mx-4">
@@ -76,8 +94,8 @@ export default function AILoadingComponent() {
       {/* Progress indicator */}
       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
         <div
-          className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full animate-pulse"
-          style={{ width: "70%" }}
+          className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full transition-all duration-500"
+          style={{ width: `${progress}%` }}
         ></div>
       </div>
     </div>

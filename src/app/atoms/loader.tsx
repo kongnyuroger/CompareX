@@ -1,3 +1,5 @@
+"use client";
+
 export default function RobotLoader() {
   return (
     <div className="flex justify-center items-center h-50">
