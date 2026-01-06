@@ -52,13 +52,6 @@ function useSidebar() {
   return context;
 }
 
-// Utility function to set cookies safely
-function setCookie(name: string, value: string, maxAge: number) {
-  if (typeof document !== "undefined") {
-    document.cookie = `${name}=${value}; path=/; max-age=${maxAge}`;
-  }
-}
-
 function SidebarProvider({
   defaultOpen = true,
   open: openProp,
@@ -75,6 +68,8 @@ function SidebarProvider({
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
 
+  // This is the internal state of the sidebar.
+  // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
   const setOpen = React.useCallback(
@@ -86,11 +81,8 @@ function SidebarProvider({
         _setOpen(openState);
       }
 
-      setCookie(
-        SIDEBAR_COOKIE_NAME,
-        openState.toString(),
-        SIDEBAR_COOKIE_MAX_AGE,
-      );
+      // This sets the cookie to keep the sidebar state.
+      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
     [setOpenProp, open],
   );
@@ -146,7 +138,7 @@ function SidebarProvider({
             } as React.CSSProperties
           }
           className={cn(
-            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full",
+            "group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex justify-center min-h-svh w-full",
             className,
           )}
           {...props}

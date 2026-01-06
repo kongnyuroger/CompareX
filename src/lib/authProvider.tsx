@@ -69,6 +69,7 @@ export function UserContextProvider({
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
+    localStorage.removeItem("username");
     router.push("/");
   };
 

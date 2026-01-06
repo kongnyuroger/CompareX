@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google"; // Changed from Inter
 import "./globals.css";
 import Script from "next/script";
-import { Toaster } from "@/components/ui/sonner";
-import { LayoutContextProvider } from "@/lib/layoutProvider";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { UserContextProvider } from "../lib/authProvider";
+import { AppSidebar } from "./components/app-sidebar";
+import Navbar from "./components/Navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,23 +29,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <div className="">
-          <UserContextProvider>
-            <LayoutContextProvider>{children}</LayoutContextProvider>
-            <Toaster />
-          </UserContextProvider>
+      <UserContextProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarTrigger className="py-7 mx-5 sm:hidden" />
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <div className="">
+              <Navbar />
+              {children}
 
-          <Script
-            src="https://apis.google.com/js/platform.js"
-            async
-            defer
-          ></Script>
-          <Toaster />
-        </div>
-      </body>
+              <Script
+                src="https://apis.google.com/js/platform.js"
+                async
+                defer
+              ></Script>
+            </div>
+          </body>
+        </SidebarProvider>
+      </UserContextProvider>
     </html>
   );
 }

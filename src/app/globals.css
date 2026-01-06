@@ -53,23 +53,17 @@
   .btn-secondary {
     @apply border border-gray-200 text-gray-700 font-medium px-6 h-12 rounded-xl;
   }
-  
+
   .form-input {
     @apply w-full px-6 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
   }
-
-  /* Sidebar trigger fix */
-  .sidebar-mobile-trigger {
-    @apply fixed top-4 left-4 z-50 p-2.5 rounded-lg shadow-lg transition-all hover:scale-105 md:hidden flex items-center justify-center;
-    background-color: var(--color-primary) !important;
-    color: white !important;
-    opacity: 1 !important;
-    backdrop-filter: none !important;
-  }
+  .sidebar-btn {
+  @apply flex items-center gap-3 rounded-md px-3 py-2
+         hover:bg-indigo-100 hover:text-indigo-600
+         data-[active=true]:bg-indigo-600
+         data-[active=true]:text-white;
+}
   
-  .sidebar-mobile-trigger:hover {
-    background-color: var(--color-primary-dark) !important;
-  }
 }
 
 @layer utilities {
@@ -85,6 +79,7 @@
     @apply w-full bg-primary text-white text-xl font-medium py-4 rounded-lg hover:bg-primary-dark transition-colors duration-200;
   }
 
+  
   .section {
     @apply py-12;
   }
@@ -117,3 +112,37 @@ body {
 html {
   font-family: Arial, Helvetica, sans-serif; 
 }
+
+:root {
+  --sidebar: hsl(0 0% 98%);
+  --sidebar-foreground: hsl(240 5.3% 26.1%);
+  --sidebar-primary: hsl(240 5.9% 10%);
+  --sidebar-primary-foreground: hsl(0 0% 98%);
+  --sidebar-accent: hsl(240 4.8% 95.9%);
+  --sidebar-accent-foreground: hsl(240 5.9% 10%);
+  --sidebar-border: hsl(220 13% 91%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+.dark {
+  --sidebar: hsl(240 5.9% 10%);
+  --sidebar-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-primary: hsl(224.3 76.3% 48%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(240 3.7% 15.9%);
+  --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+  --sidebar-border: hsl(240 3.7% 15.9%);
+  --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+
+@theme inline {
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
