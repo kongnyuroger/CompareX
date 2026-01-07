@@ -24,31 +24,38 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
-      <UserContextProvider>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarTrigger className="py-7 mx-5 sm:hidden" />
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <div className="">
-              <Navbar />
-              {children}
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen`}
+      >
+        <UserContextProvider>
+          <SidebarProvider>
+            {/* Root flex container */}
+            <div className="flex min-h-screen w-full">
+              {/* Sidebar */}
+              <AppSidebar />
 
-              <Script
-                src="https://apis.google.com/js/platform.js"
-                async
-                defer
-              ></Script>
+              {/* Main content */}
+              <div className="flex flex-col flex-1 min-h-screen">
+                {/* Mobile trigger */}
+                <SidebarTrigger className="py-7 mx-5 sm:hidden" />
+
+                {/* Top navbar */}
+                <Navbar />
+
+                {/* Page content */}
+                <main className="flex-1">{children}</main>
+              </div>
             </div>
-          </body>
-        </SidebarProvider>
-      </UserContextProvider>
+
+            <Script src="https://apis.google.com/js/platform.js" async defer />
+          </SidebarProvider>
+        </UserContextProvider>
+      </body>
     </html>
   );
 }
