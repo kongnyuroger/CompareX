@@ -133,7 +133,11 @@ export default function HomePage() {
         const res = await trendingProducts();
         console.log("Trending products:", res.data.trending);
         if (res.data && Array.isArray(res.data.trending)) {
-          setProducts(res.data.trending);
+          const shuffledProducts = [...res.data.trending].sort(
+            () => Math.random() - 0.5,
+          );
+
+          setProducts(shuffledProducts);
         }
       } catch (err: unknown) {
         const apiError = err as ApiError;
