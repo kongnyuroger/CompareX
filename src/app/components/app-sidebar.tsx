@@ -232,7 +232,7 @@ export function AppSidebar() {
       <SidebarFooter className="border-t p-2">
         <SidebarMenu>
           <SidebarMenuItem>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton className="gap-3 rounded-md px-3 py-2 hover:bg-indigo-100">
                   <User2 className="text-indigo-600" />
