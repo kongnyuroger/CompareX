@@ -32,6 +32,8 @@ export default function HomePage() {
   const [error, setError] = useState("");
   const [searchId, setSearchId] = useState<string | null>(null);
   const [streamStats, setStreamStats] = useState<StreamStats | null>(null);
+  const [isTrending, setIsTrending] = useState(true);
+
   const { products, setProducts, currentPage, setCurrentPage } =
     useUserContext();
 
@@ -118,7 +120,7 @@ export default function HomePage() {
       } else {
         setError(message);
       }
-
+      setIsTrending(false);
       setProducts([]);
       setLoading(false);
     }
@@ -138,6 +140,7 @@ export default function HomePage() {
           );
 
           setProducts(shuffledProducts);
+          setIsTrending(true);
         }
       } catch (err: unknown) {
         const apiError = err as ApiError;
@@ -236,12 +239,16 @@ export default function HomePage() {
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-gray-800">
-                {loading
-                  ? `Found ${products.length} products (searching...)`
-                  : `Search Results (${products.length} products)`}
+                {isTrending
+                  ? `Trending Products (${products.length})`
+                  : loading
+                    ? `Found ${products.length} products (searching...)`
+                    : `Search Results (${products.length} products)`}
               </h2>
+
               {searchId && (
-                <p className="text-sm text-gray-500">Search ID: {searchId}</p>
+                <p>.</p>
+                // <p className="text-sm text-gray-500">Search ID: {searchId}</p>
               )}
             </div>
 
