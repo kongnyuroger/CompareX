@@ -44,88 +44,76 @@ export default function Pagination({
         Previous
       </button>
 
-      {/* Desktop: Page numbers - Show all on large screens */}
-      <div className="hidden lg:flex flex-wrap gap-2">
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <button
-            key={pageNum}
-            type="button"
-            onClick={() => onPageChange(pageNum)}
-            className={`w-10 h-10 rounded-lg font-medium ${
-              currentPage === pageNum
-                ? "bg-primary text-white"
-                : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-            }`}
-          >
-            {pageNum}
-          </button>
-        ))}
-      </div>
+      {/* Tablet & Desktop: Condensed page numbers */}
+      <div className="hidden sm:flex gap-2">
+        {(() => {
+          const range = window.innerWidth >= 1024 ? 2 : 1; // desktop ±2, tablet ±1
 
-      {/* Tablet: Condensed page numbers */}
-      <div className="hidden sm:flex lg:hidden gap-2">
-        {totalPages <= 5 ? (
-          // Show all pages if 5 or fewer
-          Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-            <button
-              key={pageNum}
-              type="button"
-              onClick={() => onPageChange(pageNum)}
-              className={`w-10 h-10 rounded-lg font-medium ${
-                currentPage === pageNum
-                  ? "bg-primary text-white"
-                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              {pageNum}
-            </button>
-          ))
-        ) : (
-          // Show condensed with ellipsis
-          <>
-            <button
-              type="button"
-              onClick={() => onPageChange(1)}
-              className={`w-10 h-10 rounded-lg font-medium ${
-                currentPage === 1
-                  ? "bg-primary text-white"
-                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              1
-            </button>
-            {currentPage > 3 && (
-              <span className="w-10 h-10 flex items-center justify-center text-gray-400">
-                ...
-              </span>
-            )}
-            {currentPage > 2 && currentPage < totalPages - 1 && (
+          const start = Math.max(2, currentPage - range);
+          const end = Math.min(totalPages - 1, currentPage + range);
+
+          return (
+            <>
+              {/* First page */}
               <button
                 type="button"
-                onClick={() => onPageChange(currentPage)}
-                className="w-10 h-10 rounded-lg font-medium bg-primary text-white"
+                onClick={() => onPageChange(1)}
+                className={`w-10 h-10 rounded-lg font-medium ${
+                  currentPage === 1
+                    ? "bg-primary text-white"
+                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                }`}
               >
-                {currentPage}
+                1
               </button>
-            )}
-            {currentPage < totalPages - 2 && (
-              <span className="w-10 h-10 flex items-center justify-center text-gray-400">
-                ...
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={() => onPageChange(totalPages)}
-              className={`w-10 h-10 rounded-lg font-medium ${
-                currentPage === totalPages
-                  ? "bg-primary text-white"
-                  : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
-              }`}
-            >
-              {totalPages}
-            </button>
-          </>
-        )}
+
+              {/* Left ellipsis */}
+              {start > 2 && (
+                <span className="w-10 h-10 flex items-center justify-center text-gray-400">
+                  …
+                </span>
+              )}
+
+              {/* Middle pages */}
+              {Array.from({ length: end - start + 1 }, (_, i) => start + i).map(
+                (page) => (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => onPageChange(page)}
+                    className={`w-10 h-10 rounded-lg font-medium ${
+                      currentPage === page
+                        ? "bg-primary text-white"
+                        : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+
+              {/* Right ellipsis */}
+              {end < totalPages - 1 && (
+                <span className="w-10 h-10 flex items-center justify-center text-gray-400">
+                  …
+                </span>
+              )}
+
+              {/* Last page */}
+              <button
+                type="button"
+                onClick={() => onPageChange(totalPages)}
+                className={`w-10 h-10 rounded-lg font-medium ${
+                  currentPage === totalPages
+                    ? "bg-primary text-white"
+                    : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50"
+                }`}
+              >
+                {totalPages}
+              </button>
+            </>
+          );
+        })()}
       </div>
 
       {/* Mobile & Tablet: Navigation buttons */}
