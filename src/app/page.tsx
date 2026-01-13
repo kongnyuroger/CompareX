@@ -82,7 +82,7 @@ export default function HomePage() {
               const uniqueNewProducts = newProducts.filter(
                 (p) => !existingIds.has(p.id),
               );
-              return [...prevProducts, ...uniqueNewProducts];
+              return [...prevProducts, ...uniqueNewProducts] as any;
             });
           },
 

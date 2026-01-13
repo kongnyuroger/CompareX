@@ -20,7 +20,7 @@ type UserContextProviderprop = {
   logout: () => void;
   loading: boolean;
   products: Product[];
-  setProducts: (products: Product[]) => void;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   currentPage: number;
   setCurrentPage: (page: number) => void;
 };
@@ -31,7 +31,7 @@ const UserContext = createContext<UserContextProviderprop>({
   logout: () => {},
   loading: false,
   products: [],
-  setProducts: () => {},
+  setProducts: () => undefined,
   currentPage: 1,
   setCurrentPage: () => {},
 });
