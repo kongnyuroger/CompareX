@@ -190,12 +190,12 @@ export function AppSidebar() {
                 <p className="text-sm text-gray-400">No search history yet</p>
               </div>
             ) : (
-              <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+              <div className="max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
                 {history.map((item) => (
                   <SidebarMenuItem key={item.searchId}>
                     <SidebarMenuButton
                       className={cn(
-                        "group relative flex justify-between cursor-pointer items-center gap-1 rounded-lg px-3 py-2.5",
+                        "group relative  cursor-pointer gap-0  rounded-lg px-3 py-2.5",
                         "transition-all duration-200",
                         "hover:bg-gray-50",
                         activeSearch === item.searchId &&
@@ -206,7 +206,7 @@ export function AppSidebar() {
                       <button
                         type="button"
                         onClick={() => handleSearchClick(item.searchId)}
-                        className="w-full text-left"
+                        className="w-full flex flex-col h-fit items-start gap-0"
                       >
                         <span className="truncate text-sm font-medium text-gray-700 group-hover:text-gray-900">
                           {item.query}

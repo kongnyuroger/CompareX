@@ -5,12 +5,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useUserContext } from "@/lib/authProvider";
 import {
+  type ProductScore,
   type StreamComplete,
   type StreamError,
   type StreamedProduct,
   type StreamStats,
-  searchStreamService,
-} from "@/services/searchStreamService";
+  searchSocketService,
+} from "@/services/searchSocketService";
 import AILoadingComponent from "./components/botLoader";
 import Hero from "./components/Hero";
 import Pagination from "./components/Pagination";
@@ -33,11 +34,11 @@ export default function HomePage() {
   const [searchId, setSearchId] = useState<string | null>(null);
   const [streamStats, setStreamStats] = useState<StreamStats | null>(null);
   const [isTrending, setIsTrending] = useState(true);
+  const [productScores, setProductScores] = useState<ProductScore[]>([]);
 
   const { products, setProducts, currentPage, setCurrentPage } =
     useUserContext();
 
-  const cancelSearchRef = useRef<(() => void) | null>(null);
   const productsPerPage = 6;
 
   // Calculate pagination values
@@ -50,16 +51,12 @@ export default function HomePage() {
   const totalPages = Math.ceil(products.length / productsPerPage);
 
   /**
-   * Handle streaming search
-   */ const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
+   * Handle streaming search with Socket.IO
+   */
+  const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!search.trim()) return;
-
-    // Cancel any existing search
-    if (cancelSearchRef.current) {
-      cancelSearchRef.current();
-    }
 
     try {
       setLoading(true);
@@ -68,15 +65,30 @@ export default function HomePage() {
       setProducts([]);
       setSearchId(null);
       setStreamStats(null);
+      setProductScores([]);
+      setIsTrending(false);
 
-      // Start streaming
-      const { searchId: newSearchId, cancel } =
-        await searchStreamService.streamSearch(search, {
-          onProduct: (newProducts: StreamedProduct[], sid: string) => {
-            console.log(`Received ${newProducts.length} products from ${sid}`);
+      // Start Socket.IO stream
+      const { searchId: newSearchId } = await searchSocketService.startSearch(
+        search,
+        {
+          onSearchStarted: (data) => {
+            console.log("🚀 Search started:", data);
+            setSearchId(data.searchId);
+          },
+
+          onProduct: (
+            newProducts: StreamedProduct[],
+            scores: ProductScore[],
+            sid: string,
+          ) => {
+            console.log(
+              `📦 Received ${newProducts.length} products from ${sid}`,
+            );
 
             setSearchId(sid);
 
+            // Append new products (avoid duplicates)
             setProducts((prevProducts) => {
               const existingIds = new Set(prevProducts.map((p) => p.id));
               const uniqueNewProducts = newProducts.filter(
@@ -84,27 +96,39 @@ export default function HomePage() {
               );
               return [...prevProducts, ...uniqueNewProducts] as any;
             });
+
+            // Append scores
+            setProductScores((prev) => [...prev, ...scores]);
           },
 
           onStats: (stats: StreamStats, sid: string) => {
-            console.log("Stream stats:", stats);
+            console.log("📊 Stream stats:", stats);
             setSearchId(sid);
             setStreamStats(stats);
           },
 
           onComplete: (summary: StreamComplete) => {
-            console.log("Search complete:", summary);
+            console.log("✅ Search complete:", summary);
             setLoading(false);
             setSearchId(summary.searchId);
           },
 
           onError: (err: StreamError) => {
-            console.error("Stream error:", err);
+            console.error("❌ Stream error:", err);
             setError(`Error from ${err.source}: ${err.error}`);
           },
-        });
 
-      cancelSearchRef.current = cancel;
+          onCancelled: () => {
+            console.log("🛑 Search cancelled");
+            setLoading(false);
+          },
+        },
+        {
+          maxPages: 1, // Can be made configurable
+        },
+      );
+
+      console.log("Search initiated with ID:", newSearchId);
     } catch (err: unknown) {
       const apiError = err as ApiError;
       const message =
@@ -115,15 +139,22 @@ export default function HomePage() {
       // Check if it's an authentication error
       if (message.includes("Authentication") || message.includes("log in")) {
         setError("Please log in to search for products");
-        // Optionally redirect to login page
-        // router.push('/login');
       } else {
         setError(message);
       }
+
       setIsTrending(false);
       setProducts([]);
       setLoading(false);
     }
+  };
+
+  /**
+   * Cancel search
+   */
+  const handleCancelSearch = () => {
+    searchSocketService.cancelSearch();
+    setLoading(false);
   };
 
   /**
@@ -154,15 +185,13 @@ export default function HomePage() {
 
     fetchData();
   }, [setProducts]);
-  console.log("Current products:", products);
+
   /**
    * Cleanup on unmount
    */
   useEffect(() => {
     return () => {
-      if (cancelSearchRef.current) {
-        cancelSearchRef.current();
-      }
+      searchSocketService.disconnect();
     };
   }, []);
 
@@ -198,6 +227,15 @@ export default function HomePage() {
             >
               {loading ? "Searching..." : "Compare"}
             </button>
+            {loading && (
+              <button
+                type="button"
+                onClick={handleCancelSearch}
+                className="px-8 py-4 bg-red-500 hover:bg-red-600 text-white font-medium text-base transition-colors whitespace-nowrap"
+              >
+                Cancel
+              </button>
+            )}
           </div>
         </form>
 
@@ -247,8 +285,9 @@ export default function HomePage() {
               </h2>
 
               {searchId && (
-                <p>.</p>
-                // <p className="text-sm text-gray-500">Search ID: {searchId}</p>
+                <p className="text-sm text-gray-500">
+                  Search ID: {searchId.slice(0, 8)}...
+                </p>
               )}
             </div>
 
