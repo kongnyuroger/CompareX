@@ -133,6 +133,7 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const res = await trendingProducts();
+
         console.log("Trending products:", res.data.trending);
         if (res.data && Array.isArray(res.data.trending)) {
           const shuffledProducts = [...res.data.trending].sort(
