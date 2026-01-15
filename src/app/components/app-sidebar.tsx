@@ -11,6 +11,7 @@ import {
   Sparkles,
   User,
 } from "lucide-react";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
@@ -139,11 +140,11 @@ export function AppSidebar() {
     try {
       // Fetch search results with scores
       const res = await searchHistoryById(searchId);
-      
+
       const rankedProducts: Product[] = res.data.rankedProducts || [];
       const productScores: ProductScore[] = res.data.productScores || [];
 
-      console.log('📜 Historical search loaded:', {
+      console.log("📜 Historical search loaded:", {
         searchId,
         products: rankedProducts.length,
         scores: productScores.length,
@@ -151,18 +152,22 @@ export function AppSidebar() {
 
       // Sort products by AI score (highest first)
       const sortedProducts = [...rankedProducts].sort((a, b) => {
-        const scoreA = productScores.find(s => s.productId === a.id)?.relevanceScore || 0;
-        const scoreB = productScores.find(s => s.productId === b.id)?.relevanceScore || 0;
+        const scoreA =
+          productScores.find((s) => s.productId === a.id)?.relevanceScore || 0;
+        const scoreB =
+          productScores.find((s) => s.productId === b.id)?.relevanceScore || 0;
         return scoreB - scoreA; // Descending order
       });
 
-      console.log('✅ Products sorted by AI score:', {
+      console.log("✅ Products sorted by AI score:", {
         topProduct: sortedProducts[0]?.title,
-        topScore: productScores.find(s => s.productId === sortedProducts[0]?.id)?.relevanceScore,
+        topScore: productScores.find(
+          (s) => s.productId === sortedProducts[0]?.id,
+        )?.relevanceScore,
       });
 
       // Dispatch custom event to homepage with sorted products and scores
-      const event = new CustomEvent('historicalSearch', {
+      const event = new CustomEvent("historicalSearch", {
         detail: {
           products: sortedProducts,
           scores: productScores,
@@ -170,9 +175,8 @@ export function AppSidebar() {
         },
       });
       window.dispatchEvent(event);
-
     } catch (error) {
-      console.error('Failed to load historical search:', error);
+      console.error("Failed to load historical search:", error);
     } finally {
       setLoadingSearchId(null);
     }
@@ -229,10 +233,10 @@ export function AppSidebar() {
                 )}
                 asChild
               >
-                <a href="/about">
+                <Link href="/about">
                   <User className="h-5 w-5" />
                   <span className="font-medium">About</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
@@ -279,7 +283,7 @@ export function AppSidebar() {
                           </span>
                           {loadingSearchId === item.searchId && (
                             <svg
-                            aria-hidden="true"
+                              aria-hidden="true"
                               className="animate-spin h-4 w-4 text-blue-500"
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
