@@ -4,6 +4,7 @@ import {
   Cpu,
   Globe,
   Landmark,
+  type LucideIcon,
   ShieldCheck,
   Users,
   Zap,
@@ -11,6 +12,33 @@ import {
 import React from "react";
 
 export default function AboutPage() {
+  const techStack: {
+    icon: LucideIcon;
+    title: string;
+    desc: string;
+  }[] = [
+    {
+      icon: Globe,
+      title: "Price Competitiveness",
+      desc: "How the product’s price compares with similar items across platforms.",
+    },
+    {
+      icon: Cpu,
+      title: "Overall Value",
+      desc: "Balance of price, usefulness, and quality indicators.",
+    },
+    {
+      icon: Zap,
+      title: "Seller Credibility",
+      desc: "Trustworthiness of the seller based on ratings and history.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Product Popularity",
+      desc: "User demand reflected through reviews and engagement.",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-[#f8fafc] text-[#334155]">
       {/* Page Header */}
@@ -129,37 +157,15 @@ export default function AboutPage() {
             results based on:
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              {
-                icon: <Globe />,
-                title: "Price Competitiveness",
-                desc: "How the product’s price compares with similar items across platforms.",
-              },
-              {
-                icon: <Cpu />,
-                title: "Overall Value",
-                desc: "Balance of price, usefulness, and quality indicators.",
-              },
-              {
-                icon: <Zap />,
-                title: "Seller Credibility",
-                desc: "Trustworthiness of the seller based on ratings and history.",
-              },
-              {
-                icon: <ShieldCheck />,
-                title: "Product Popularity",
-                desc: "User demand reflected through reviews and engagement.",
-              },
-            ].map((tech) => (
+            {techStack.map((tech) => (
               <div
                 key={tech.title}
                 className="group p-8 bg-[#f8fafc] rounded-xl text-center hover:-translate-y-1 transition-transform duration-300"
               >
                 <div className="flex justify-center mb-4 text-indigo-600">
-                  {React.cloneElement(tech.icon as React.ReactElement, {
-                    size: 40,
-                  })}
+                  <tech.icon size={40} />
                 </div>
+
                 <h3 className="text-lg font-bold text-[#1e293b] mb-2">
                   {tech.title}
                 </h3>
