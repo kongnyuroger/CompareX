@@ -1,22 +1,24 @@
 // app/page.tsx
 
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { useUserContext } from "@/lib/authProvider";
+import { useEffect, useRef, useState } from 'react';
+import { useUserContext } from '@/lib/authProvider';
 import {
-  type ProductScore,
+  searchSocketService,
   type StreamComplete,
   type StreamError,
   type StreamedProduct,
   type StreamStats,
-  searchSocketService,
-} from "@/services/searchSocketService";
-import AILoadingComponent from "./components/botLoader";
-import Hero from "./components/Hero";
-import Pagination from "./components/Pagination";
-import ProductGrid from "./components/ProductGrid";
-import { trendingProducts } from "./services/api";
+  type ProductScore,
+} from '@/services/searchSocketService';
+import AILoadingComponent from './components/botLoader';
+import Hero from './components/Hero';
+import Pagination from './components/Pagination';
+import ProductGrid from './components/ProductGrid';
+import AIScoreSummary from './components/AIScoreSummary';
+import ScoreComparisonView from './components/ScoreComparisonView';
+import { trendingProducts } from './services/api';
 
 interface ApiError {
   response?: {
@@ -28,27 +30,38 @@ interface ApiError {
 }
 
 export default function HomePage() {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [searchId, setSearchId] = useState<string | null>(null);
   const [streamStats, setStreamStats] = useState<StreamStats | null>(null);
   const [isTrending, setIsTrending] = useState(true);
   const [productScores, setProductScores] = useState<ProductScore[]>([]);
+  const [sortByAI, setSortByAI] = useState(false); // Toggle for AI sorting
+  const [isHistoricalSearch, setIsHistoricalSearch] = useState(false); // Track if viewing history
 
   const { products, setProducts, currentPage, setCurrentPage } =
     useUserContext();
 
   const productsPerPage = 6;
 
-  // Calculate pagination values
+  // Sort products by AI scores if enabled
+  const sortedProducts = sortByAI && productScores.length > 0
+    ? [...products].sort((a, b) => {
+        const scoreA = productScores.find(s => s.productId === a.id)?.relevanceScore || 0;
+        const scoreB = productScores.find(s => s.productId === b.id)?.relevanceScore || 0;
+        return scoreB - scoreA; // Descending order (highest score first)
+      })
+    : products;
+
+  // Calculate pagination values from sorted products
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = products.slice(
+  const currentProducts = sortedProducts.slice(
     indexOfFirstProduct,
     indexOfLastProduct,
   );
-  const totalPages = Math.ceil(products.length / productsPerPage);
+  const totalPages = Math.ceil(sortedProducts.length / productsPerPage);
 
   /**
    * Handle streaming search with Socket.IO
@@ -60,20 +73,21 @@ export default function HomePage() {
 
     try {
       setLoading(true);
-      setError("");
+      setError('');
       setCurrentPage(1);
       setProducts([]);
       setSearchId(null);
       setStreamStats(null);
       setProductScores([]);
       setIsTrending(false);
+      setSortByAI(false); // Reset AI sorting
 
       // Start Socket.IO stream
       const { searchId: newSearchId } = await searchSocketService.startSearch(
         search,
         {
           onSearchStarted: (data) => {
-            console.log("🚀 Search started:", data);
+            console.log('🚀 Search started:', data);
             setSearchId(data.searchId);
           },
 
@@ -102,24 +116,26 @@ export default function HomePage() {
           },
 
           onStats: (stats: StreamStats, sid: string) => {
-            console.log("📊 Stream stats:", stats);
+            console.log('📊 Stream stats:', stats);
             setSearchId(sid);
             setStreamStats(stats);
           },
 
           onComplete: (summary: StreamComplete) => {
-            console.log("✅ Search complete:", summary);
+            console.log('✅ Search complete:', summary);
             setLoading(false);
             setSearchId(summary.searchId);
+            // Automatically enable AI sorting when search completes
+            setSortByAI(true);
           },
 
           onError: (err: StreamError) => {
-            console.error("❌ Stream error:", err);
+            console.error('❌ Stream error:', err);
             setError(`Error from ${err.source}: ${err.error}`);
           },
 
           onCancelled: () => {
-            console.log("🛑 Search cancelled");
+            console.log('🛑 Search cancelled');
             setLoading(false);
           },
         },
@@ -128,17 +144,17 @@ export default function HomePage() {
         },
       );
 
-      console.log("Search initiated with ID:", newSearchId);
+      console.log('Search initiated with ID:', newSearchId);
     } catch (err: unknown) {
       const apiError = err as ApiError;
       const message =
         apiError?.message ||
         apiError?.response?.data?.message ||
-        "Failed to connect to search service";
+        'Failed to connect to search service';
 
       // Check if it's an authentication error
-      if (message.includes("Authentication") || message.includes("log in")) {
-        setError("Please log in to search for products");
+      if (message.includes('Authentication') || message.includes('log in')) {
+        setError('Please log in to search for products');
       } else {
         setError(message);
       }
@@ -164,7 +180,7 @@ export default function HomePage() {
     const fetchData = async () => {
       try {
         const res = await trendingProducts();
-        console.log("Trending products:", res.data.trending);
+        console.log('Trending products:', res.data.trending);
         if (res.data && Array.isArray(res.data.trending)) {
           const shuffledProducts = [...res.data.trending].sort(
             () => Math.random() - 0.5,
@@ -172,19 +188,51 @@ export default function HomePage() {
 
           setProducts(shuffledProducts);
           setIsTrending(true);
+          setIsHistoricalSearch(false);
         }
       } catch (err: unknown) {
         const apiError = err as ApiError;
         const message =
           apiError?.response?.data?.message ||
           apiError?.message ||
-          "Failed to load trending products";
+          'Failed to load trending products';
         console.error(message);
       }
     };
 
     fetchData();
   }, [setProducts]);
+
+  /**
+   * Listen for historical search events from sidebar
+   */
+  useEffect(() => {
+    const handleHistoricalSearch = (event: CustomEvent) => {
+      const { products: historicalProducts, scores } = event.detail;
+      
+      console.log('📜 Loading historical search:', {
+        products: historicalProducts.length,
+        scores: scores.length,
+      });
+
+      // Set products and scores
+      setProducts(historicalProducts);
+      setProductScores(scores);
+      
+      // Enable AI sorting and mark as historical
+      setSortByAI(true);
+      setIsTrending(false);
+      setIsHistoricalSearch(true);
+      setCurrentPage(1);
+      setError('');
+    };
+
+    window.addEventListener('historicalSearch' as any, handleHistoricalSearch);
+
+    return () => {
+      window.removeEventListener('historicalSearch' as any, handleHistoricalSearch);
+    };
+  }, [setProducts, setCurrentPage]);
 
   /**
    * Cleanup on unmount
@@ -197,7 +245,7 @@ export default function HomePage() {
 
   const handlePageChange = (pageNumber: number) => {
     setCurrentPage(pageNumber);
-    window.scrollTo({ top: 400, behavior: "smooth" });
+    window.scrollTo({ top: 400, behavior: 'smooth' });
   };
 
   return (
@@ -221,11 +269,11 @@ export default function HomePage() {
               disabled={loading}
               className={`px-8 py-4 ${
                 loading
-                  ? "bg-primary-dark cursor-not-allowed"
-                  : "bg-primary cursor-pointer hover:bg-primary-dark"
+                  ? 'bg-primary-dark cursor-not-allowed'
+                  : 'bg-primary cursor-pointer hover:bg-primary-dark'
               } text-white font-medium text-base transition-colors whitespace-nowrap`}
             >
-              {loading ? "Searching..." : "Compare"}
+              {loading ? 'Searching...' : 'Compare'}
             </button>
             {loading && (
               <button
@@ -246,7 +294,7 @@ export default function HomePage() {
               {Object.entries(streamStats.platformStats).map(
                 ([platform, stats]) => (
                   <span key={platform} className="mx-2">
-                    {platform}: {stats.total} {stats.completed ? "✓" : "⏳"}
+                    {platform}: {stats.total} {stats.completed ? '✓' : '⏳'}
                   </span>
                 ),
               )}
@@ -279,19 +327,75 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold text-gray-800">
                 {isTrending
                   ? `Trending Products (${products.length})`
-                  : loading
-                    ? `Found ${products.length} products (searching...)`
-                    : `Search Results (${products.length} products)`}
+                  : isHistoricalSearch
+                    ? `Previous Search Results (${sortedProducts.length} products)`
+                    : loading
+                      ? `Found ${products.length} products (searching...)`
+                      : `Search Results (${sortedProducts.length} products)`}
               </h2>
 
-              {searchId && (
+              {searchId && !isHistoricalSearch && (
                 <p className="text-sm text-gray-500">
                   Search ID: {searchId.slice(0, 8)}...
                 </p>
               )}
             </div>
 
-            <ProductGrid products={currentProducts} />
+            {/* AI Score Summary - Show after search completes */}
+            {!loading && !isTrending && productScores.length > 0 && (
+              <AIScoreSummary 
+                scores={productScores} 
+                totalProducts={sortedProducts.length} 
+              />
+            )}
+
+            {/* Score Comparison View - Detailed rankings */}
+            {!loading && !isTrending && productScores.length > 0 && (
+              <ScoreComparisonView 
+                products={sortedProducts}
+                scores={productScores}
+              />
+            )}
+
+            {/* AI Sorting Toggle - Only show after search completes or for historical */}
+            {!loading && !isTrending && productScores.length > 0 && (
+              <div className="mb-6 flex items-center justify-between bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-500 text-white p-2 rounded-lg">
+                    <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">AI-Powered Ranking</h3>
+                    <p className="text-sm text-gray-600">
+                      {sortByAI 
+                        ? isHistoricalSearch
+                          ? 'Showing products in AI relevance order from your previous search'
+                          : 'Products sorted by relevance score (best matches first)'
+                        : 'Toggle to sort by AI relevance scores'}
+                    </p>
+                  </div>
+                </div>
+                
+                <button
+                 type='button'
+                  onClick={() => {
+                    setSortByAI(!sortByAI);
+                    setCurrentPage(1); // Reset to first page when toggling
+                  }}
+                  className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                    sortByAI
+                      ? 'bg-blue-500 text-white hover:bg-blue-600 shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-50 border-2 border-gray-300'
+                  }`}
+                >
+                  {sortByAI ? '✓ AI Sorted' : 'Sort by AI'}
+                </button>
+              </div>
+            )}
+
+            <ProductGrid products={currentProducts} scores={productScores} showScores={sortByAI} />
           </div>
 
           <Pagination

@@ -1,3 +1,5 @@
+// app/components/app-sidebar.tsx
+
 "use client";
 
 import {
@@ -41,6 +43,23 @@ interface HistoryItem {
   createdAt: string;
 }
 
+interface ProductScore {
+  productId: string;
+  relevanceScore: number;
+  aiReasoning: string;
+}
+
+interface Product {
+  id: string;
+  title: string;
+  price: number;
+  badge: string;
+  badgeColor: string;
+  imageUrl: string;
+  source: string;
+  productUrl: string;
+}
+
 /* ----------------------------------
    Utils
 ----------------------------------- */
@@ -81,8 +100,9 @@ export function AppSidebar() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [activeSearch, setActiveSearch] = useState<string | null>(null);
+  const [loadingSearchId, setLoadingSearchId] = useState<string | null>(null);
 
-  const { logout, setProducts, token } = useUserContext();
+  const { logout, token } = useUserContext();
 
   useEffect(() => {
     if (!token) {
@@ -108,10 +128,54 @@ export function AppSidebar() {
     getHistory();
   }, [token]);
 
+  /**
+   * Handle search history click
+   * Fetches products AND scores, then sorts by AI relevance
+   */
   async function handleSearchClick(searchId: string) {
     setActiveSearch(searchId);
-    const res = await searchHistoryById(searchId);
-    setProducts(res.data.rankedProducts);
+    setLoadingSearchId(searchId);
+
+    try {
+      // Fetch search results with scores
+      const res = await searchHistoryById(searchId);
+      
+      const rankedProducts: Product[] = res.data.rankedProducts || [];
+      const productScores: ProductScore[] = res.data.productScores || [];
+
+      console.log('📜 Historical search loaded:', {
+        searchId,
+        products: rankedProducts.length,
+        scores: productScores.length,
+      });
+
+      // Sort products by AI score (highest first)
+      const sortedProducts = [...rankedProducts].sort((a, b) => {
+        const scoreA = productScores.find(s => s.productId === a.id)?.relevanceScore || 0;
+        const scoreB = productScores.find(s => s.productId === b.id)?.relevanceScore || 0;
+        return scoreB - scoreA; // Descending order
+      });
+
+      console.log('✅ Products sorted by AI score:', {
+        topProduct: sortedProducts[0]?.title,
+        topScore: productScores.find(s => s.productId === sortedProducts[0]?.id)?.relevanceScore,
+      });
+
+      // Dispatch custom event to homepage with sorted products and scores
+      const event = new CustomEvent('historicalSearch', {
+        detail: {
+          products: sortedProducts,
+          scores: productScores,
+          searchId,
+        },
+      });
+      window.dispatchEvent(event);
+
+    } catch (error) {
+      console.error('Failed to load historical search:', error);
+    } finally {
+      setLoadingSearchId(null);
+    }
   }
 
   return (
@@ -195,7 +259,7 @@ export function AppSidebar() {
                   <SidebarMenuItem key={item.searchId}>
                     <SidebarMenuButton
                       className={cn(
-                        "group relative  cursor-pointer gap-0  rounded-lg px-3 py-2.5",
+                        "group relative cursor-pointer gap-0 rounded-lg px-3 py-2.5",
                         "transition-all duration-200",
                         "hover:bg-gray-50",
                         activeSearch === item.searchId &&
@@ -206,11 +270,37 @@ export function AppSidebar() {
                       <button
                         type="button"
                         onClick={() => handleSearchClick(item.searchId)}
-                        className="w-full flex flex-col h-fit items-start gap-0"
+                        disabled={loadingSearchId === item.searchId}
+                        className="w-full flex flex-col h-fit items-start gap-0 disabled:opacity-50"
                       >
-                        <span className="truncate text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                          {item.query}
-                        </span>
+                        <div className="w-full flex items-center justify-between">
+                          <span className="truncate text-sm font-medium text-gray-700 group-hover:text-gray-900">
+                            {item.query}
+                          </span>
+                          {loadingSearchId === item.searchId && (
+                            <svg
+                            aria-hidden="true"
+                              className="animate-spin h-4 w-4 text-blue-500"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                              ></circle>
+                              <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                              ></path>
+                            </svg>
+                          )}
+                        </div>
                         <span className="text-xs text-gray-400">
                           {timeAgo(item.createdAt)}
                         </span>
