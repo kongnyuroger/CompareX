@@ -185,40 +185,43 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon" className="border-r border-gray-200 bg-white">
       {/* ---------- Header ---------- */}
-      <SidebarHeader className="border-b border-gray-100 px-4 py-4 ">
-        <div className="flex items-center justify-between">
+      <SidebarHeader className="border-b border-gray-100 px-4 py-4">
+        <div className="flex items-center justify-between group-data-[collapsible=icon]:justify-center">
           <div className="flex items-center group-data-[collapsible=icon]:hidden gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-600">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
-            <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h2 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-primary bg-clip-text text-transparent">
               CompareX
             </h2>
           </div>
-          <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-gray-100" />
+          <SidebarTrigger className="h-8 w-8 rounded-lg hover:bg-gray-100 cursor-pointer" />
         </div>
       </SidebarHeader>
 
-      <SidebarContent className="px-3 py-4">
+      <SidebarContent className=" py-4">
         {/* ---------- Navigation ---------- */}
         <SidebarGroup className="mb-6">
-          <SidebarGroupLabel className="px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
+          <SidebarGroupLabel className="px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2 group-data-[collapsible=icon]:hidden">
             Navigation
           </SidebarGroupLabel>
           <SidebarMenu className="space-y-1">
             <SidebarMenuItem>
               <SidebarMenuButton
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-lg px-3 py-2.5",
+                  "group/item relative flex items-center gap-3 rounded-lg px-3 py-2.5",
                   "transition-all duration-200",
-                  "hover:bg-blue-50 hover:text-blue-600",
-                  "data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600",
+                  "hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-600 hover:shadow-sm",
+                  "data-[active=true]:bg-gradient-to-r data-[active=true]:from-blue-50 data-[active=true]:to-blue-100 data-[active=true]:text-blue-600 data-[active=true]:shadow-sm",
+                  "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:mx-auto",
                 )}
                 asChild
               >
                 <a href="/">
-                  <Home className="h-5 w-5" />
-                  <span className="font-medium">Home</span>
+                  <div className="relative">
+                    <Home className="h-5 w-5 transition-transform group-hover/item:scale-110" />
+                    <div className="absolute inset-0 bg-blue-400 blur-md opacity-0 group-hover/item:opacity-20 transition-opacity" />
+                  </div>
+                  <span className="font-medium group-data-[collapsible=icon]:hidden">
+                    Home
+                  </span>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -226,16 +229,22 @@ export function AppSidebar() {
             <SidebarMenuItem>
               <SidebarMenuButton
                 className={cn(
-                  "group relative flex items-center gap-3 rounded-lg px-3 py-2.5",
+                  "group/item relative flex items-center gap-3 rounded-lg px-3 py-2.5",
                   "transition-all duration-200",
-                  "hover:bg-purple-50 hover:text-purple-600",
-                  "data-[active=true]:bg-purple-50 data-[active=true]:text-purple-600",
+                  "hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 hover:text-purple-600 hover:shadow-sm",
+                  "data-[active=true]:bg-gradient-to-r data-[active=true]:from-purple-50 data-[active=true]:to-purple-100 data-[active=true]:text-purple-600 data-[active=true]:shadow-sm",
+                  "group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:mx-auto",
                 )}
                 asChild
               >
                 <Link href="/about">
-                  <User className="h-5 w-5" />
-                  <span className="font-medium">About</span>
+                  <div className="relative">
+                    <User className="h-5 w-5 transition-transform group-hover/item:scale-110" />
+                    <div className="absolute inset-0 bg-primary blur-md opacity-0 group-hover/item:opacity-20 transition-opacity" />
+                  </div>
+                  <span className="font-medium group-data-[collapsible=icon]:hidden">
+                    About
+                  </span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
@@ -246,7 +255,7 @@ export function AppSidebar() {
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
           <SidebarGroupLabel className="flex items-center gap-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
             <Clock className="h-3.5 w-3.5" />
-            Recent Searches
+            Search History
           </SidebarGroupLabel>
 
           <SidebarMenu className="space-y-1">
@@ -324,17 +333,18 @@ export function AppSidebar() {
           <SidebarMenuItem>
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="group flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-gray-50 transition-all">
-                  <div className="flex min-h-6 min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm">
+                <SidebarMenuButton className="group/footer flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:shadow-sm transition-all group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:mx-auto">
+                  <div className="relative flex min-h-6 min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm shadow-md group-hover/footer:shadow-lg group-hover/footer:scale-110 transition-all">
                     {username.charAt(0).toUpperCase()}
+                    <div className="absolute inset-0 rounded-full bg-blue-400 blur-md opacity-0 group-hover/footer:opacity-30 transition-opacity" />
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
                     <p className="truncate text-sm font-medium text-gray-700">
                       {username}
                     </p>
                     <p className="text-xs text-gray-400">View profile</p>
                   </div>
-                  <ChevronUp className="h-4 w-4 text-gray-400 group-hover:text-gray-600 transition-transform group-data-[state=open]:rotate-180" />
+                  <ChevronUp className="h-4 w-4 text-gray-400 group-hover/footer:text-gray-600 transition-transform group-data-[state=open]:rotate-180 group-data-[collapsible=icon]:hidden" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
 
