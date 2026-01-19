@@ -214,7 +214,7 @@ export function AppSidebar() {
                 )}
                 asChild
               >
-                <a href="/">
+                <Link href="/">
                   <div className="relative">
                     <Home className="h-5 w-5 transition-transform group-hover/item:scale-110" />
                     <div className="absolute inset-0 bg-blue-400 blur-md opacity-0 group-hover/item:opacity-20 transition-opacity" />
@@ -222,7 +222,7 @@ export function AppSidebar() {
                   <span className="font-medium group-data-[collapsible=icon]:hidden">
                     Home
                   </span>
-                </a>
+                </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
 
