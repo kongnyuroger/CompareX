@@ -1,36 +1,177 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# compareX Frontend
 
-## Getting Started
+compareX is a **real-time product comparison platform** designed to aggregate and stream products from multiple e-commerce sources.
+This repository contains the **frontend application**, built with **Next.js**, optimized for real-time updates, scalability, and a smooth user experience.
 
-First, run the development server:
+---
+
+## 🚀 Overview
+
+The compareX frontend is responsible for:
+
+* Displaying live product results as they are streamed from the backend
+* Managing user search sessions
+* Handling real-time updates via WebSockets
+* Providing a clean, responsive, and intuitive UI
+
+The application is designed to work seamlessly with a **Socket.IO-powered backend**, enabling users to see results **progressively** without waiting for a full search to complete.
+
+---
+
+## 🧠 Key Features
+
+* **Real-time product streaming**
+* **Incremental UI updates** (no page reloads)
+* **Search start / cancel support**
+* **Live status indicators** (running, completed, cancelled)
+* **Scalable component architecture**
+* **Responsive design**
+
+---
+
+## 🛠 Tech Stack
+
+* **Framework:** Next.js (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS
+* **Real-time Communication:** Socket.IO Client
+* **State Management:** React Hooks
+* **Icons & UI:** Lucide / Custom components
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── app/                # Next.js App Router
+│   ├── page.tsx        # Main entry page
+│   ├── layout.tsx      # Global layout
+│
+├── components/         # Reusable UI components
+│   ├── ProductGrid.tsx
+│   ├── SearchBar.tsx
+│   └── StatusIndicator.tsx
+│
+├── services/           # API & socket services
+│   └── socket.ts
+│
+├── types/              # Shared TypeScript types
+│   └── product.ts
+│
+└── styles/             # Global styles
+```
+
+---
+
+## 🔌 Real-Time Architecture
+
+The frontend communicates with the backend using **Socket.IO** to receive live updates.
+
+**High-level flow:**
+
+```
+User Action → Socket.IO Event → Live Product Stream → UI Update
+```
+
+* Products are appended to the UI as they arrive
+* The UI reacts instantly to lifecycle events (start, complete, cancel, error)
+* No polling or manual refresh is required
+
+---
+
+## ⚙️ Getting Started
+
+### 1️⃣ Prerequisites
+
+* Node.js (v18 or higher recommended)
+* npm or yarn
+* Running compareX backend server
+
+---
+
+### 2️⃣ Installation
+
+```bash
+git clone https://github.com/your-org/comparex-frontend.git
+cd comparex-frontend
+npm install
+```
+
+---
+
+### 3️⃣ Environment Variables
+
+Create a `.env.local` file:
+
+```env
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
+```
+
+> This should point to the compareX backend Socket.IO server.
+
+---
+
+### 4️⃣ Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🧪 Scripts
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev        # Start development server
+npm run build      # Build for production
+npm run start      # Start production server
+npm run lint       # Run linting
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧩 Design Principles
 
-## Deploy on Vercel
+* **Real-time first**: UI reacts to streamed data immediately
+* **Separation of concerns**: UI, socket logic, and types are clearly separated
+* **Scalable**: Easy to add new features or data sources
+* **Maintainable**: Clean, typed, and documented code
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more info.
+## 🔐 Security & Performance
+
+* No sensitive logic is handled on the client
+* Backend controls all crawling and data validation
+* UI updates are batched where possible to reduce re-renders
+* Designed to work reliably on unstable networks
+
+---
+
+## 📌 Future Improvements
+
+* Advanced filtering & sorting
+* Search history & saved comparisons
+* Server-side rendering optimizations
+* Internationalization (i18n)
+* Accessibility enhancements
+
+---
+
+
+
+## 📬 Contact
+
+For questions, feedback, or collaboration, please reach out via the compareX team.
+
+---
+
+**compareX Frontend**
+*Real-time product comparison, done right.*
