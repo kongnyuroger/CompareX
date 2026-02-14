@@ -328,43 +328,45 @@ export function AppSidebar() {
       </SidebarContent>
 
       {/* ---------- Footer ---------- */}
-      <SidebarFooter className="border-t border-gray-100 p-3">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu modal={false}>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="group/footer flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:shadow-sm transition-all group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:mx-auto">
-                  <div className="relative flex min-h-6 min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm shadow-md group-hover/footer:shadow-lg group-hover/footer:scale-110 transition-all">
-                    {username.charAt(0).toUpperCase()}
-                    <div className="absolute inset-0 rounded-full bg-blue-400 blur-md opacity-0 group-hover/footer:opacity-30 transition-opacity" />
-                  </div>
-                  <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
-                    <p className="truncate text-sm font-medium text-gray-700">
-                      {username}
-                    </p>
-                    <p className="text-xs text-gray-400">View profile</p>
-                  </div>
-                  <ChevronUp className="h-4 w-4 text-gray-400 group-hover/footer:text-gray-600 transition-transform group-data-[state=open]:rotate-180 group-data-[collapsible=icon]:hidden" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
+      {token && (
+        <SidebarFooter className="border-t border-gray-100 p-3">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu modal={false}>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton className="group/footer flex items-center gap-3 rounded-lg px-3 py-2.5 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:shadow-sm transition-all group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:w-12 group-data-[collapsible=icon]:h-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:mx-auto">
+                    <div className="relative flex min-h-6 min-w-6 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold text-sm shadow-md group-hover/footer:shadow-lg group-hover/footer:scale-110 transition-all">
+                      {username.charAt(0).toUpperCase()}
+                      <div className="absolute inset-0 rounded-full bg-blue-400 blur-md opacity-0 group-hover/footer:opacity-30 transition-opacity" />
+                    </div>
+                    <div className="flex-1 min-w-0 group-data-[collapsible=icon]:hidden">
+                      <p className="truncate text-sm font-medium text-gray-700">
+                        {username}
+                      </p>
+                      <p className="text-xs text-gray-400">View profile</p>
+                    </div>
+                    <ChevronUp className="h-4 w-4 text-gray-400 group-hover/footer:text-gray-600 transition-transform group-data-[state=open]:rotate-180 group-data-[collapsible=icon]:hidden" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
 
-              <DropdownMenuContent
-                className="w-56 rounded-lg border border-gray-200 bg-white shadow-lg"
-                side="top"
-                align="end"
-              >
-                <DropdownMenuItem
-                  className="cursor-pointer rounded-md hover:bg-red-50 focus:bg-red-50 transition-colors"
-                  onClick={logout}
+                <DropdownMenuContent
+                  className="w-56 rounded-lg border border-gray-200 bg-white shadow-lg"
+                  side="top"
+                  align="end"
                 >
-                  <LogOut className="mr-2 h-4 w-4 text-red-600" />
-                  <span className="text-red-600 font-medium">Sign out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+                  <DropdownMenuItem
+                    className="cursor-pointer rounded-md hover:bg-red-50 focus:bg-red-50 transition-colors"
+                    onClick={logout}
+                  >
+                    <LogOut className="mr-2 h-4 w-4 text-red-600" />
+                    <span className="text-red-600 font-medium">Sign out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
     </Sidebar>
   );
 }
