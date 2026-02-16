@@ -3,7 +3,7 @@
 export default function RobotLoader() {
   return (
     <div className="flex justify-center items-center h-50">
-      <style jsx>{`
+      <style jsx global>{`
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-20px); }
