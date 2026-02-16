@@ -108,10 +108,12 @@ export function AppSidebar() {
   useEffect(() => {
     if (!token) {
       setUsername("User");
+      setHistory([]); // Clear search history when user logs out
+      setActiveSearch(null); // Clear active search selection
+    } else {
+      const storedUsername = localStorage.getItem("username") || "User";
+      setUsername(storedUsername);
     }
-
-    const storedUsername = localStorage.getItem("username") || "User";
-    setUsername(storedUsername);
   }, [token]);
 
   useEffect(() => {
