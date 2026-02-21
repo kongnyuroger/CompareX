@@ -1,7 +1,13 @@
 "use client";
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from "next/navigation";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 type Product = {
   id: string;
@@ -47,11 +53,40 @@ export function UserContextProvider({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const router = useRouter();
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    setToken(null);
+    localStorage.removeItem("username");
+    router.push("/");
+  }, [router]);
+
   useEffect(() => {
     const t = localStorage.getItem("token");
-    setToken(t);
+    if (t) {
+      try {
+        const decoded = jwtDecode<{ exp: number }>(t);
+        if (decoded.exp * 1000 < Date.now()) {
+          // Token already expired – clean up silently
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+        } else {
+          setToken(t);
+          // Schedule logout for exactly when the token expires
+          const msUntilExpiry = decoded.exp * 1000 - Date.now();
+          const timerId = setTimeout(() => {
+            logout();
+          }, msUntilExpiry);
+          setLoading(false);
+          return () => clearTimeout(timerId);
+        }
+      } catch {
+        // Malformed token – remove it
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+      }
+    }
     setLoading(false);
-  }, []);
+  }, [logout]);
 
   const login = (newToken: string | null) => {
     if (newToken) {
@@ -64,13 +99,6 @@ export function UserContextProvider({
       localStorage.removeItem("token");
     }
     setToken(newToken);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    localStorage.removeItem("username");
-    router.push("/");
   };
 
   return (

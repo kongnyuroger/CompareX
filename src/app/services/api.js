@@ -14,6 +14,18 @@ API.interceptors.request.use((req) => {
   return req;
 });
 
+API.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  },
+);
+
 export const register = (username, email, password) =>
   API.post("/auth/register", { username, email, password });
 
