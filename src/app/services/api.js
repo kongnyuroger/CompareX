@@ -18,9 +18,14 @@ API.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      localStorage.removeItem("username");
-      window.location.href = "/";
+      const token = localStorage.getItem("token");
+      if (token) {
+        // Token was rejected server-side – clear it and redirect
+        localStorage.removeItem("token");
+        localStorage.removeItem("username");
+        window.location.href = "/";
+      }
+      // No token = already logged out; just let the error propagate silently
     }
     return Promise.reject(error);
   },
