@@ -175,3 +175,8 @@ For questions, feedback, or collaboration, please reach out via the compareX tea
 
 **compareX Frontend**
 *Real-time product comparison, done right.*
+
+##authors
+Kongnyu Roger
+Mel-cathy
+Menga-Wanji
