@@ -38,6 +38,7 @@ Products stream live to the UI as they are discovered, delivering a Google-like 
 ---
 
 ## 📸 Screenshots
+<img width="1907" height="928" alt="Screenshot from 2026-06-09 22-06-16" src="https://github.com/user-attachments/assets/842c8e4e-9193-43cf-a0c3-8daba1feeece" />
 
 > _Add screenshots of your application below._
 
