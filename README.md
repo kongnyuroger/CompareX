@@ -1,182 +1,294 @@
-# compareX Frontend
+<div align="center">
 
-compareX is a **real-time product comparison platform** designed to aggregate and stream products from multiple e-commerce sources.
-This repository contains the **frontend application**, built with **Next.js**, optimized for real-time updates, scalability, and a smooth user experience.
+# 🔍 CompareX
 
----
+**Search once. Compare everywhere. Powered by AI.**
 
-## 🚀 Overview
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Socket.io](https://img.shields.io/badge/Socket.io-4-010101?style=for-the-badge&logo=socket.io&logoColor=white)](https://socket.io/)
 
-The compareX frontend is responsible for:
-
-* Displaying live product results as they are streamed from the backend
-* Managing user search sessions
-* Handling real-time updates via WebSockets
-* Providing a clean, responsive, and intuitive UI
-
-The application is designed to work seamlessly with a **Socket.IO-powered backend**, enabling users to see results **progressively** without waiting for a full search to complete.
+</div>
 
 ---
 
-## 🧠 Key Features
+## 📋 Table of Contents
 
-* **Real-time product streaming**
-* **Incremental UI updates** (no page reloads)
-* **Search start / cancel support**
-* **Live status indicators** (running, completed, cancelled)
-* **Scalable component architecture**
-* **Responsive design**
+- [Overview](#-overview)
+- [Screenshots](#-screenshots)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Pages & Routes](#-pages--routes)
+- [Key Components](#-key-components)
+- [Getting Started](#-getting-started)
+- [Environment Variables](#-environment-variables)
+- [Project Structure](#-project-structure)
+- [Scripts](#-scripts)
+
+---
+
+## 🔍 Overview
+
+**CompareX** is a modern, AI-enhanced product comparison platform built with **Next.js 16** and **React 19**. Users search for any product once and instantly receive real-time results pulled simultaneously from Amazon, Walmart, and eBay — ranked by an AI relevance score so the best matches always appear first.
+
+Products stream live to the UI as they are discovered, delivering a Google-like search experience. Authenticated users can revisit their full search history from a persistent sidebar. A responsive, dark-mode-ready design ensures a premium experience on any device.
+
+---
+
+## 📸 Screenshots
+
+> _Add screenshots of your application below._
+
+### 🏠 Home / Search
+
+<!-- Replace the path below with an actual screenshot -->
+```
+![Home Page Screenshot](./public/screenshots/home.png)
+```
+
+---
+
+### 📦 Search Results (Live Stream)
+
+<!-- Replace the path below with an actual screenshot -->
+```
+![Search Results Screenshot](./public/screenshots/results.png)
+```
+
+---
+
+### 🤖 AI Score Overview
+
+<!-- Replace the path below with an actual screenshot -->
+```
+![AI Score Summary Screenshot](./public/screenshots/ai-scores.png)
+```
+
+---
+
+### 📜 Search History Sidebar
+
+<!-- Replace the path below with an actual screenshot -->
+```
+![Search History Screenshot](./public/screenshots/history.png)
+```
+
+---
+
+### 📄 Product Detail Page
+
+<!-- Replace the path below with an actual screenshot -->
+```
+![Product Detail Screenshot](./public/screenshots/product.png)
+```
+
+---
+
+> **Tip:** Take screenshots with `npm run dev` running, then place the images into `public/screenshots/` and remove the surrounding code fences from the markdown above.
+
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| ⚡ **Live Streaming Results** | Products appear in real time via Socket.IO as each platform is crawled |
+| 🤖 **AI-Powered Ranking** | Every product is scored 0–100 by GPT-4o-mini and sorted by relevance |
+| 📊 **Score Comparison View** | Side-by-side breakdown of each product's AI score with reasoning |
+| 📜 **Search History** | Authenticated users can reload and review any previous search |
+| 🛍️ **Multi-Platform** | Unified results from Amazon, Walmart, and eBay in one view |
+| 🌙 **Dark Mode** | Full dark/light theme toggle powered by `next-themes` |
+| 📱 **Responsive Design** | Mobile-first layout with adaptive grids |
+| 🔐 **Authentication** | JWT-based login/registration with protected routes |
+| 🔔 **Toast Notifications** | Contextual feedback via the `sonner` toast library |
+| 🎨 **Animated UI** | Lottie animations for loading states and micro-interactions |
+| 📄 **Pagination** | Clean pagination for large result sets (6 products per page) |
 
 ---
 
 ## 🛠 Tech Stack
 
-* **Framework:** Next.js (App Router)
-* **Language:** TypeScript
-* **Styling:** Tailwind CSS
-* **Real-time Communication:** Socket.IO Client
-* **State Management:** React Hooks
-* **Icons & UI:** Lucide / Custom components
+| Layer | Technology |
+|---|---|
+| **Framework** | Next.js 16 (App Router) |
+| **UI Library** | React 19 |
+| **Language** | TypeScript 5 |
+| **Styling** | Tailwind CSS 4 |
+| **Component Primitives** | Radix UI (Dialog, Dropdown, Tooltip, Separator) |
+| **Icons** | Lucide React |
+| **HTTP Client** | Axios |
+| **Real-time** | Socket.IO Client 4 |
+| **Animations** | Lottie React, tw-animate-css |
+| **Theming** | next-themes |
+| **Toasts** | Sonner |
+| **Auth** | JWT decode (`jwt-decode`) |
+| **Linting/Formatting** | Biome |
+| **Git Hooks** | Husky + lint-staged |
+
+---
+
+## 📄 Pages & Routes
+
+| Route | Description |
+|---|---|
+| `/` | Main search page — hero, search bar, live product grid |
+| `/login` | User login form |
+| `/register` | User registration form |
+| `/product/[id]` | Individual product detail page |
+| `/about` | About the project |
+
+---
+
+## 🧩 Key Components
+
+### `<Hero />`
+The landing section displayed above the search bar. Contains the app branding, tagline, and a brief explainer of how CompareX works.
+
+### `<ProductGrid />`
+Renders a responsive grid of product cards. Optionally overlays AI relevance scores on each card when `showScores` is true, with colour-coded badges (green → excellent, yellow → good, red → poor).
+
+### `<AIScoreSummary />`
+A summary panel displayed after a search completes. Shows the distribution of AI relevance scores across all results (excellent / good / fair / poor) with a top-3 ranked product highlight.
+
+### `<ScoreComparisonView />`
+A detailed, ranked breakdown view listing all products with their individual AI scores, reasoning strings, price, and source platform — allowing users to compare at a glance without opening individual product pages.
+
+### `<Pagination />`
+Stateless pagination control. Takes `currentPage`, `totalPages`, and `onPageChange` props. Renders numbered page buttons with previous/next navigation.
+
+### `<AILoadingComponent />`
+A Lottie-powered animated loading screen displayed while the first batch of streamed products is arriving.
+
+### `searchSocketService`
+A singleton service (`src/services/searchSocketService.ts`) that manages the Socket.IO connection lifecycle. Exposes:
+- `startSearch(query, callbacks, options)` — initiates the search, subscribes to stream events
+- `cancelSearch()` — cancels an in-progress search and disconnects cleanly
+- `disconnect()` — tears down the socket connection
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** >= 20
+- A running instance of the [CompareX Server](../comparex-server/README.md) (backend API)
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/your-username/comparex.git
+cd comparex
+```
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+
+```bash
+cp .env.example .env.local
+```
+
+> Fill in the values — see [Environment Variables](#-environment-variables) below.
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
+
+## 🔑 Environment Variables
+
+Create a `.env.local` file in the project root:
+
+```env
+# URL of the CompareX backend API
+NEXT_PUBLIC_API_URL=http://localhost:3000
+
+# URL of the Socket.IO server (usually the same as the API)
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
+```
+
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | ✅ | Base URL for REST API calls (Axios) |
+| `NEXT_PUBLIC_SOCKET_URL` | ✅ | Base URL for Socket.IO connection |
+
+> Both variables are prefixed with `NEXT_PUBLIC_` so they are available in client-side code.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-src/
-├── app/                # Next.js App Router
-│   ├── page.tsx        # Main entry page
-│   ├── layout.tsx      # Global layout
-│
-├── components/         # Reusable UI components
-│   ├── ProductGrid.tsx
-│   ├── SearchBar.tsx
-│   └── StatusIndicator.tsx
-│
-├── services/           # API & socket services
-│   └── socket.ts
-│
-├── types/              # Shared TypeScript types
-│   └── product.ts
-│
-└── styles/             # Global styles
+CompareX/
+├── public/                           # Static assets (icons, images, lottie files)
+├── src/
+│   ├── app/                          # Next.js App Router
+│   │   ├── layout.tsx                # Root layout (theme, auth provider, sidebar)
+│   │   ├── globals.css               # Global Tailwind styles + CSS variables
+│   │   ├── page.tsx                  # Home page (search + results)
+│   │   ├── about/                    # About page
+│   │   ├── login/                    # Login page
+│   │   ├── register/                 # Registration page
+│   │   ├── product/                  # Product detail page ([id] dynamic route)
+│   │   ├── atoms/                    # Jotai / global state atoms
+│   │   ├── components/               # Page-specific components
+│   │   │   ├── Hero.tsx
+│   │   │   ├── ProductGrid.tsx
+│   │   │   ├── Pagination.tsx
+│   │   │   ├── AIScoreSummary.tsx
+│   │   │   ├── ScoreComparisonView.tsx
+│   │   │   └── botLoader.tsx         # Lottie loading animation
+│   │   ├── services/                 # App-layer API calls (Axios wrappers)
+│   │   └── utils/                    # Page-level utility functions
+│   ├── components/
+│   │   └── ui/                       # Reusable Radix-based UI primitives
+│   ├── hooks/                        # Custom React hooks
+│   ├── lib/
+│   │   └── authProvider.tsx          # Auth context provider (JWT state, user context)
+│   └── services/
+│       └── searchSocketService.ts    # Socket.IO singleton service
+├── biome.json                        # Biome linter/formatter config
+├── components.json                   # shadcn/ui config
+├── next.config.ts                    # Next.js configuration
+├── postcss.config.mjs                # PostCSS configuration
+├── tailwind.config.ts                # Tailwind CSS theme config
+└── tsconfig.json                     # TypeScript config
 ```
 
 ---
 
-## 🔌 Real-Time Architecture
+## 📜 Scripts
 
-The frontend communicates with the backend using **Socket.IO** to receive live updates.
-
-**High-level flow:**
-
-```
-User Action → Socket.IO Event → Live Product Stream → UI Update
-```
-
-* Products are appended to the UI as they arrive
-* The UI reacts instantly to lifecycle events (start, complete, cancel, error)
-* No polling or manual refresh is required
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the Next.js development server |
+| `npm run build` | Build the production bundle |
+| `npm run start` | Start the production server |
+| `npm run lint` | Run Biome linter checks |
+| `npm run format` | Auto-format all files with Biome |
 
 ---
 
-## ⚙️ Getting Started
+## 🔗 Related
 
-### 1️⃣ Prerequisites
-
-* Node.js (v18 or higher recommended)
-* npm or yarn
-* Running compareX backend server
+- [CompareX Server (Backend)](../comparex-server/README.md) — The NestJS API powering this frontend
 
 ---
 
-### 2️⃣ Installation
+<div align="center">
 
-```bash
-git clone https://github.com/your-org/comparex-frontend.git
-cd comparex-frontend
-npm install
-```
+Built with ❤️ using Next.js, React 19 & Tailwind CSS
 
----
-
-### 3️⃣ Environment Variables
-
-Create a `.env.local` file:
-
-```env
-NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
-```
-
-> This should point to the compareX backend Socket.IO server.
-
----
-
-### 4️⃣ Run the Development Server
-
-```bash
-npm run dev
-```
-
-Open your browser at:
-
-```
-http://localhost:3000
-```
-
----
-
-## 🧪 Scripts
-
-```bash
-npm run dev        # Start development server
-npm run build      # Build for production
-npm run start      # Start production server
-npm run lint       # Run linting
-```
-
----
-
-## 🧩 Design Principles
-
-* **Real-time first**: UI reacts to streamed data immediately
-* **Separation of concerns**: UI, socket logic, and types are clearly separated
-* **Scalable**: Easy to add new features or data sources
-* **Maintainable**: Clean, typed, and documented code
-
----
-
-## 🔐 Security & Performance
-
-* No sensitive logic is handled on the client
-* Backend controls all crawling and data validation
-* UI updates are batched where possible to reduce re-renders
-* Designed to work reliably on unstable networks
-
----
-
-## 📌 Future Improvements
-
-* Advanced filtering & sorting
-* Search history & saved comparisons
-* Server-side rendering optimizations
-* Internationalization (i18n)
-* Accessibility enhancements
-
----
-
-
-
-## 📬 Contact
-
-For questions, feedback, or collaboration, please reach out via the compareX team.
-
----
-
-**compareX Frontend**
-*Real-time product comparison, done right.*
-
-##authors
-Kongnyu Roger
-Mel-cathy
-Menga-Wanji
+</div>
