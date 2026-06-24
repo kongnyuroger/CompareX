@@ -290,6 +290,6 @@ CompareX/
 
 <div align="center">
 
-Built with ❤️ using Next.js, React 19 & Tailwind CSS
+Built with  using Next.js, React 19 & Tailwind CSS
 
 </div>
