@@ -288,6 +288,8 @@ CompareX/
 
 ---
 
+## authors: Roger
+
 <div align="center">
 
 Built with  using Next.js, React 19 & Tailwind CSS
