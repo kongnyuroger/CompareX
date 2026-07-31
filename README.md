@@ -288,7 +288,7 @@ CompareX/
 
 ---
 
-## authors: Roger
+## authors: Kongnyu Roger
 
 <div align="center">
 
