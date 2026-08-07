@@ -198,31 +198,25 @@ export default function AboutPage() {
             <Users className="w-8 h-8 text-indigo-600" />
             <h2 className="text-3xl font-bold text-[#1e293b]">Our Team</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               {
-                name: "Tchuisseu Ryan",
-                role: "CEO & Founder",
-                bio: "Former e-commerce executive with 10+ years in the industry.",
-                initials: "TR",
+                name: "Kongnyu Roger",
+                role: "Full-Stack Developer",
+                bio: "Integrates frontend and backend, optimizing functionality and UX end-to-end.",
+                initials: "KR",
               },
               {
-                name: "Fokou Jovien",
-                role: "CTO",
-                bio: "Expert in scalable web architectures and data mining.",
-                initials: "FJ",
+                name: "Salah Mel-Catherine",
+                role: "Full-Stack Developer",
+                bio: "Building robust server-side solutions, Expert in scalable web architectures and data mining.",
+                initials: "SM",
               },
               {
-                name: "Noupi Duran",
-                role: "Head of Data Science",
-                bio: "Specializes in price prediction and trend analysis.",
-                initials: "ND",
-              },
-              {
-                name: "Njanja Herve",
-                role: "Lead Developer",
-                bio: "Full-stack developer focused on UX and performance.",
-                initials: "NH",
+                name: "Menga Wanji",
+                role: "Full-Stack Developer",
+                bio: "Builds robust servers and APIs, responsive user interfaces with a focus on usability.",
+                initials: "MW",
               },
             ].map((member) => (
               <div
